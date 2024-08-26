@@ -1,0 +1,8 @@
+Music selected: 0
+Volume: 0.25
+watchAllField: 0
+Easy record: ?
+Medium record: ?
+Hard record: ?
+Extreme record: ?
+Insane record: ?
