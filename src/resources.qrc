@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MainWindow.qml</file>
+        <file>SettingsPage.qml</file>
+        <file>CustomGamePage.qml</file>
+        <file>RecordsPage.qml</file>
+        <file>images/trophy.png</file>
+        <file>images/settings.png</file>
+    </qresource>
+</RCC>
