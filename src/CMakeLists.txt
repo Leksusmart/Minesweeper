@@ -26,7 +26,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resourses.qrc
         GameWindow.h Game.cpp Game.ui
         meta.rc
-
         data.json
     )
 # Define target properties for Android with Qt 6 as:
@@ -46,7 +45,7 @@ else()
         )
     endif()
 endif()
-
+set_target_properties(src PROPERTIES OUTPUT_NAME "Minesweeper")
 target_link_libraries(src PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -9,12 +9,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
 QT_END_NAMESPACE
 
-class GameWindow : public QMainWindow {   Q_OBJECT
+class GameWindow : public QMainWindow {
 public:
     explicit GameWindow(WelcomeWindow *parent = nullptr);
     ~GameWindow();
 
 private:
+    Q_OBJECT
     Ui::GameWindow *ui;
 
 public slots:
