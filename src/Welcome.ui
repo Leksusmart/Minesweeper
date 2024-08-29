@@ -46,7 +46,7 @@
       <x>10</x>
       <y>150</y>
       <width>335</width>
-      <height>180</height>
+      <height>190</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -65,7 +65,7 @@ border-radius:5px;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="records">
      <widget class="QScrollArea" name="scrollAreaRecords">
@@ -74,13 +74,19 @@ border-radius:5px;
         <x>0</x>
         <y>5</y>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>330</width>
+        <height>180</height>
        </size>
       </property>
       <property name="cursor" stdset="0">
@@ -102,9 +108,9 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-220</y>
+         <y>0</y>
          <width>320</width>
-         <height>388</height>
+         <height>375</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -112,6 +118,9 @@ border-radius:5px;
          <layout class="QFormLayout" name="formLayoutRecords">
           <property name="horizontalSpacing">
            <number>0</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>3</number>
           </property>
           <property name="topMargin">
            <number>0</number>
@@ -121,6 +130,24 @@ border-radius:5px;
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="labelStaticDifficult">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>25</height>
+             </size>
+            </property>
             <property name="font">
              <font>
               <pointsize>13</pointsize>
@@ -420,13 +447,19 @@ border-radius:5px;
         <x>0</x>
         <y>5</y>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
        </rect>
       </property>
       <property name="minimumSize">
        <size>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>330</width>
+        <height>180</height>
        </size>
       </property>
       <property name="cursor" stdset="0">
@@ -450,7 +483,7 @@ border-radius:5px;
          <x>0</x>
          <y>0</y>
          <width>316</width>
-         <height>396</height>
+         <height>408</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -498,51 +531,7 @@ border-radius:5px;
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QSlider" name="SliderUiVolume">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="cursor">
-             <cursorShape>SizeHorCursor</cursorShape>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>25</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSlider" name="SliderMusicVolume">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="cursor">
-             <cursorShape>SizeHorCursor</cursorShape>
-            </property>
-            <property name="maximum">
-             <number>100</number>
-            </property>
-            <property name="value">
-             <number>25</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
+          <item row="2" column="0">
            <widget class="QLabel" name="labelStaticMusicVolume">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -575,52 +564,47 @@ border-radius:5px;
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QSpinBox" name="spinBoxMusicVolume">
+          <item row="1" column="1">
+           <widget class="QSlider" name="SliderUiVolume">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>48</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>48</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
-            </property>
-            <property name="correctionMode">
-             <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-            </property>
-            <property name="keyboardTracking">
-             <bool>false</bool>
-            </property>
-            <property name="suffix">
-             <string notr="true">%</string>
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
             </property>
             <property name="maximum">
              <number>100</number>
             </property>
             <property name="value">
              <number>25</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSlider" name="SliderMusicVolume">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>25</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
           </item>
@@ -673,16 +657,80 @@ border-radius:5px;
             </property>
            </widget>
           </item>
+          <item row="2" column="2">
+           <widget class="QSpinBox" name="spinBoxMusicVolume">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>48</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>48</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::ButtonSymbols::NoButtons</enum>
+            </property>
+            <property name="correctionMode">
+             <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+            </property>
+            <property name="keyboardTracking">
+             <bool>false</bool>
+            </property>
+            <property name="suffix">
+             <string notr="true">%</string>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="value">
+             <number>25</number>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
          <widget class="QComboBox" name="comboBoxMusic">
+          <property name="font">
+           <font>
+            <family>Segoe Print</family>
+            <pointsize>12</pointsize>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
+          </property>
           <property name="styleSheet">
            <string notr="true">color:silver;</string>
           </property>
           <property name="currentText">
-           <string/>
+           <string>Набор музыки №1</string>
           </property>
+          <item>
+           <property name="text">
+            <string>Набор музыки №1</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
@@ -763,6 +811,9 @@ border-radius:5px;</string>
              <height>24</height>
             </rect>
            </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
 	background-color: rgb(0, 128, 0);
@@ -788,6 +839,9 @@ QPushButton:pressed {
              <width>80</width>
              <height>24</height>
             </rect>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
             <string notr="true">QPushButton {
@@ -828,6 +882,9 @@ QPushButton:pressed {
              <height>120</height>
             </size>
            </property>
+           <property name="cursor" stdset="0">
+            <cursorShape>IBeamCursor</cursorShape>
+           </property>
            <property name="styleSheet">
             <string notr="true">background-color:rgb(169, 169, 169);
 color:black;</string>
@@ -852,7 +909,7 @@ color:black;</string>
         <x>0</x>
         <y>5</y>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -864,13 +921,13 @@ color:black;</string>
       <property name="minimumSize">
        <size>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>330</width>
-        <height>170</height>
+        <height>180</height>
        </size>
       </property>
       <property name="verticalScrollBarPolicy">
@@ -889,9 +946,9 @@ color:black;</string>
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-34</y>
          <width>314</width>
-         <height>195</height>
+         <height>212</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayoutCustom">
@@ -912,6 +969,71 @@ color:black;</string>
           <property name="spacing">
            <number>0</number>
           </property>
+          <item row="0" column="2">
+           <widget class="QProgressBar" name="progressBarX">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>260</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>260</width>
+              <height>19</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>11</pointsize>
+             </font>
+            </property>
+            <property name="contextMenuPolicy">
+             <enum>Qt::ContextMenuPolicy::PreventContextMenu</enum>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QProgressBar {
+	background-color: qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(0, 168, 0, 255), stop:1 rgba(119, 0, 0, 255));
+	border: 1px solid dark;
+	border-radius: 3px;
+}
+QProgressBar:chunk {
+	background-color:rgba(255, 255, 255, 0);
+}</string>
+            </property>
+            <property name="maximum">
+             <number>65</number>
+            </property>
+            <property name="value">
+             <number>4</number>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="1" column="1">
            <widget class="QProgressBar" name="progressBarY">
             <property name="sizePolicy">
@@ -923,13 +1045,13 @@ color:black;</string>
             <property name="minimumSize">
              <size>
               <width>23</width>
-              <height>130</height>
+              <height>140</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>23</width>
-              <height>130</height>
+              <height>140</height>
              </size>
             </property>
             <property name="font">
@@ -971,38 +1093,85 @@ QProgressBar:chunk {
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QFrame" name="frame">
+          <item row="2" column="2">
+           <widget class="QSlider" name="SliderX">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>260</width>
-              <height>130</height>
+              <height>19</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>260</width>
-              <height>130</height>
+              <height>19</height>
              </size>
             </property>
-            <property name="autoFillBackground">
-             <bool>false</bool>
+            <property name="cursor">
+             <cursorShape>SizeHorCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true">QFrame {
-	background-color: silver;
+             <string notr="true">QSlider {
+    background: transparent; /* Фон слайдера */
+}
+
+QSlider::groove:horizontal {
+    background: #444; /* Цвет дорожки слайдера */
+    height: 8px; /* Высота дорожки */
+    border-radius: 4px; /* Скругление углов дорожки */
+}
+
+QSlider::handle:horizontal {
+    background: #888; /* Цвет ползунка */
+    border: 2px solid #aaa; /* Светлая рамка вокруг ползунка */
+    width: 16px; /* Ширина ползунка */
+    margin: -4px 0; /* Отступы */
+    border-radius: 4px; /* Скругление углов ползунка */
+}
+
+QSlider::handle:horizontal:hover {
+    background: #aaa; /* Цвет ползунка при наведении */
+}
+
+QSlider::sub-page:horizontal {
+    background: #555; /* Цвет заполненной части слайдера */
+    border-radius: 4px; /* Скругление углов заполненной части */
+}
+
+QSlider::add-page:horizontal {
+    background: #444; /* Цвет незаполненной части слайдера */
+    border-radius: 4px; /* Скругление углов незаполненной части */
 }</string>
             </property>
-            <property name="frameShape">
-             <enum>QFrame::Shape::Box</enum>
+            <property name="maximum">
+             <number>65</number>
             </property>
-            <property name="frameShadow">
-             <enum>QFrame::Shadow::Raised</enum>
+            <property name="sliderPosition">
+             <number>4</number>
             </property>
-            <property name="lineWidth">
-             <number>2</number>
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
+          </item>
+          <item row="1" column="0">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item row="1" column="3">
            <widget class="QSlider" name="SliderY">
@@ -1015,13 +1184,13 @@ QProgressBar:chunk {
             <property name="minimumSize">
              <size>
               <width>20</width>
-              <height>130</height>
+              <height>140</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
               <width>40</width>
-              <height>130</height>
+              <height>140</height>
              </size>
             </property>
             <property name="cursor">
@@ -1074,8 +1243,64 @@ QSlider::add-page:vertical {
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QProgressBar" name="progressBarX">
+          <item row="1" column="2">
+           <widget class="QFrame" name="frame">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>260</width>
+              <height>140</height>
+             </size>
+            </property>
+            <property name="autoFillBackground">
+             <bool>false</bool>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">QFrame {
+	background-color: silver;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>2</number>
+            </property>
+            <property name="midLineWidth">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QFormLayout" name="formLayout_4">
+          <property name="formAlignment">
+           <set>Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignTop</set>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelStaticMinesFill">
+            <property name="text">
+             <string>Заполнение бомбами</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spinBoxMinesFill">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -1084,172 +1309,35 @@ QSlider::add-page:vertical {
             </property>
             <property name="minimumSize">
              <size>
-              <width>260</width>
-              <height>21</height>
+              <width>50</width>
+              <height>24</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>260</width>
-              <height>21</height>
+              <width>100</width>
+              <height>24</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <pointsize>11</pointsize>
-             </font>
-            </property>
-            <property name="contextMenuPolicy">
-             <enum>Qt::ContextMenuPolicy::PreventContextMenu</enum>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QProgressBar {
-	background-color: qlineargradient(spread:pad, x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(0, 168, 0, 255), stop:1 rgba(119, 0, 0, 255));
-	border: 1px solid dark;
-	border-radius: 3px;
-}
-QProgressBar:chunk {
-	background-color:rgba(255, 255, 255, 0);
-}</string>
-            </property>
-            <property name="maximum">
-             <number>65</number>
-            </property>
-            <property name="value">
-             <number>4</number>
+            <property name="frame">
+             <bool>false</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
-            <property name="format">
-             <string>%v</string>
+            <property name="suffix">
+             <string notr="true">%</string>
             </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QSlider" name="SliderX">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>260</width>
-              <height>16</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>260</width>
-              <height>16</height>
-             </size>
-            </property>
-            <property name="cursor">
-             <cursorShape>SizeHorCursor</cursorShape>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">QSlider {
-    background: transparent; /* Фон слайдера */
-}
-
-QSlider::groove:horizontal {
-    background: #444; /* Цвет дорожки слайдера */
-    height: 8px; /* Высота дорожки */
-    border-radius: 4px; /* Скругление углов дорожки */
-}
-
-QSlider::handle:horizontal {
-    background: #888; /* Цвет ползунка */
-    border: 2px solid #aaa; /* Светлая рамка вокруг ползунка */
-    width: 16px; /* Ширина ползунка */
-    margin: -4px 0; /* Отступы */
-    border-radius: 4px; /* Скругление углов ползунка */
-}
-
-QSlider::handle:horizontal:hover {
-    background: #aaa; /* Цвет ползунка при наведении */
-}
-
-QSlider::sub-page:horizontal {
-    background: #555; /* Цвет заполненной части слайдера */
-    border-radius: 4px; /* Скругление углов заполненной части */
-}
-
-QSlider::add-page:horizontal {
-    background: #444; /* Цвет незаполненной части слайдера */
-    border-radius: 4px; /* Скругление углов незаполненной части */
-}</string>
+            <property name="minimum">
+             <number>10</number>
             </property>
             <property name="maximum">
-             <number>65</number>
+             <number>90</number>
             </property>
-            <property name="sliderPosition">
-             <number>4</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
+            <property name="value">
+             <number>20</number>
             </property>
            </widget>
-          </item>
-          <item row="3" column="2">
-           <layout class="QFormLayout" name="formLayout_4">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Заполнение бомбами</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QSpinBox" name="spinBox">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>50</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>24</height>
-               </size>
-              </property>
-              <property name="suffix">
-               <string notr="true">%</string>
-              </property>
-              <property name="minimum">
-               <number>10</number>
-              </property>
-              <property name="maximum">
-               <number>90</number>
-              </property>
-              <property name="value">
-               <number>20</number>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="1" column="0">
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>
@@ -1260,12 +1348,12 @@ QSlider::add-page:horizontal {
    </widget>
    <widget class="QPushButton" name="btn_start">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
       <x>87</x>
-      <y>335</y>
+      <y>345</y>
       <width>180</width>
       <height>80</height>
      </rect>
@@ -1285,6 +1373,7 @@ QSlider::add-page:horizontal {
     <property name="font">
      <font>
       <pointsize>22</pointsize>
+      <bold>true</bold>
      </font>
     </property>
     <property name="cursor">
@@ -1294,7 +1383,7 @@ QSlider::add-page:horizontal {
      <string notr="true">QPushButton {
     background-color: #4CAF50; /* Основной зеленый цвет */
     color: white; /* Цвет текста */
-    border: none; /* Убираем рамку */
+    border: none;
     border-radius: 5px; /* Скругленные углы */
 }
 
@@ -1340,6 +1429,11 @@ QPushButton:disabled {
       <height>25</height>
      </size>
     </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
@@ -1350,8 +1444,8 @@ QPushButton:disabled {
      <string notr="true">QPushButton {
     background-color: #f44336; /* Основной красный цвет */
     color: white; /* Цвет текста */
-    border: none; /* Убираем рамку */
-    border-radius: 3px; /* Скругленные углы */
+    border: none;
+    border-radius: 5px; /* Скругленные углы */
 }
 
 QPushButton:hover {
@@ -1433,7 +1527,7 @@ QToolButton:hover {
      <item>
       <widget class="QComboBox" name="comboBox">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -1447,17 +1541,59 @@ QToolButton:hover {
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>25</height>
+         <height>35</height>
         </size>
        </property>
        <property name="font">
         <font>
-         <pointsize>12</pointsize>
+         <family>Segoe UI</family>
+         <pointsize>16</pointsize>
         </font>
+       </property>
+       <property name="contextMenuPolicy">
+        <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: rgb(45, 45, 45);</string>
        </property>
+       <property name="insertPolicy">
+        <enum>QComboBox::InsertPolicy::NoInsert</enum>
+       </property>
+       <item>
+        <property name="text">
+         <string>Обучение</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Лёгкая</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Средняя</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Сложная</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Экстрим</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Безумие</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Своя</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
@@ -1589,11 +1725,11 @@ QToolButton:hover {
    <hints>
     <hint type="sourcelabel">
      <x>74</x>
-     <y>527</y>
+     <y>299</y>
     </hint>
     <hint type="destinationlabel">
      <x>170</x>
-     <y>391</y>
+     <y>163</y>
     </hint>
    </hints>
   </connection>
@@ -1605,43 +1741,11 @@ QToolButton:hover {
    <hints>
     <hint type="sourcelabel">
      <x>247</x>
-     <y>524</y>
+     <y>296</y>
     </hint>
     <hint type="destinationlabel">
      <x>190</x>
-     <y>412</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>SliderY</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>progressBarY</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>311</x>
-     <y>209</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>38</x>
-     <y>251</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>SliderX</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>progressBarX</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>157</x>
-     <y>322</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>165</x>
-     <y>168</y>
+     <y>184</y>
     </hint>
    </hints>
   </connection>
@@ -1652,12 +1756,12 @@ QToolButton:hover {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>241</x>
-     <y>207</y>
+     <x>262</x>
+     <y>229</y>
     </hint>
     <hint type="destinationlabel">
-     <x>304</x>
-     <y>209</y>
+     <x>316</x>
+     <y>229</y>
     </hint>
    </hints>
   </connection>
@@ -1668,12 +1772,44 @@ QToolButton:hover {
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>240</x>
-     <y>241</y>
+     <x>262</x>
+     <y>199</y>
     </hint>
     <hint type="destinationlabel">
-     <x>293</x>
-     <y>242</y>
+     <x>316</x>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SliderX</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>progressBarX</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>330</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>173</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SliderY</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>progressBarY</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>308</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>31</x>
+     <y>246</y>
     </hint>
    </hints>
   </connection>

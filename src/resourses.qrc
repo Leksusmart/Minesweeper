@@ -3,6 +3,21 @@
         <file>Background1.png</file>
         <file>Icon.ico</file>
         <file>cup.png</file>
+        <file>Background2.png</file>
+        <file>button_0.png</file>
+        <file>button_1.png</file>
+        <file>button_2.png</file>
+        <file>button_3.png</file>
+        <file>button_4.png</file>
+        <file>button_5.png</file>
+        <file>button_6.png</file>
+        <file>button_7.png</file>
+        <file>button_8.png</file>
+        <file>button_defusedbomb.png</file>
+        <file>button_flag.png</file>
+        <file>button_question.png</file>
+        <file>button_unpresseed.png</file>
+        <file>button_armedbomb.png</file>
     </qresource>
     <qresource prefix="/sounds"/>
 </RCC>
