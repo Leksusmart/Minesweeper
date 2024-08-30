@@ -110,12 +110,15 @@ border-radius:5px;
          <x>0</x>
          <y>0</y>
          <width>320</width>
-         <height>375</height>
+         <height>442</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QFormLayout" name="formLayoutRecords">
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::FieldGrowthPolicy::FieldsStayAtSizeHint</enum>
+          </property>
           <property name="horizontalSpacing">
            <number>0</number>
           </property>
@@ -131,7 +134,7 @@ border-radius:5px;
           <item row="0" column="0">
            <widget class="QLabel" name="labelStaticDifficult">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
@@ -160,6 +163,12 @@ border-radius:5px;
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="labelStaticDifficultEasy">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -172,6 +181,12 @@ border-radius:5px;
           </item>
           <item row="1" column="1">
            <widget class="QLabel" name="labelEasyRecord">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -184,6 +199,12 @@ border-radius:5px;
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="labelStaticDifficultMedium">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -196,6 +217,12 @@ border-radius:5px;
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="labelMediumRecord">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -208,6 +235,12 @@ border-radius:5px;
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="labelStaticDifficultHard">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -220,6 +253,12 @@ border-radius:5px;
           </item>
           <item row="3" column="1">
            <widget class="QLabel" name="labelHardRecord">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>10</pointsize>
@@ -232,6 +271,12 @@ border-radius:5px;
           </item>
           <item row="4" column="0">
            <widget class="QLabel" name="labelStaticDifficultExtreme">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -256,6 +301,12 @@ border-radius:5px;
           </item>
           <item row="5" column="0">
            <widget class="QLabel" name="labelStaticDifficultInsane">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <pointsize>12</pointsize>
@@ -282,6 +333,74 @@ border-radius:5px;
         </item>
         <item>
          <widget class="Line" name="line_separator1">
+          <property name="styleSheet">
+           <string notr="true">background-color: silver;</string>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelStaticDefusedCouner">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Обезврежено мин:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="labelDefusedCouner">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>неизвестно</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelStaticUncorrectFlagsCounter">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Неверно помечено:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="labelUncorrectFlagsCounter">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>неизвестно</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="Line" name="line_separator">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="styleSheet">
            <string notr="true">background-color: silver;</string>
           </property>
@@ -946,7 +1065,7 @@ color:black;</string>
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-34</y>
+         <y>0</y>
          <width>314</width>
          <height>212</height>
         </rect>

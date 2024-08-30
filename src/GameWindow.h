@@ -47,12 +47,28 @@ private:
    bool once = true;
    bool onceResize = true;
    QString message = "Error";
+   QTimer *timerSec = new QTimer;
+   qint64 time = 0;
+   QTimer *minetimer = new QTimer;
+   QVector<QToolButton *> arr;
+   short int arrsize = 0;
+   short int interval = 800;
+   bool GameEnd = false;
+   short int minInterval = 50;
+   short int openFieldCounter = 0;
+   short int intervalCounter = 0;
+   bool isTraining = false;
 public slots:
    void log(const QString &message) { parent->log(message); };
 private slots:
    bool createButtonField();
    void resizeEvent(QResizeEvent *event) override;
    void closeEvent(QCloseEvent *event) override;
+   void secTimer();
+   void leftClick(int x, int y);
+   void rightClick(int x, int y);
+   void endGame(bool win);
+   void updateMineTimer();
 };
 
 #endif // GAMEWINDOW_H

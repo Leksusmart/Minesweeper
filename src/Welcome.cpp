@@ -26,6 +26,8 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->btn_records->setIcon(QIcon(":/images/cup.png"));
    ui->btn_records->setIconSize(QSize(25, 25));
    ui->btn_settings->setIconSize(QSize(25, 25));
+   ui->btn_records->setFixedSize(QSize(25, 25));
+   ui->btn_settings->setFixedSize(QSize(25, 25));
    ui->stackedWidget->hide();
    loadData();
    ui->gridLayoutCustom->addWidget(ui->frame, 1, 2, Qt::AlignTop | Qt::AlignLeft);
@@ -43,8 +45,10 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->labelAllGames->setText(QString::number(GamesCounter));
    ui->labelDefeats->setText(QString::number(Defeats));
    ui->labelWins->setText(QString::number(Wins));
+   double g = GamesCounter;
+   double w = Wins;
    if (GamesCounter > 0)
-      ui->labelWinsProcents->setText(QString::number((Wins / GamesCounter) * 100) + "%");
+      ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
    else if (GamesCounter == 0)
       ui->labelWinsProcents->setText("0%");
    QRect availableGeometry = QApplication::primaryScreen()->availableGeometry();
@@ -170,6 +174,16 @@ void WelcomeWindow::showWidget(int index)
       ui->stackedWidget->setCurrentIndex(index);
       ui->stackedWidget->show();
    }
+   if (!ui->stackedWidget->isHidden()) {
+      switch (ui->stackedWidget->currentIndex()) {
+      case 0: //Records
+         log("Current open page is \"Records\"");
+      case 1: //Settings
+         log("Current open page is \"Settings\"");
+      case 2: //Custom_game
+         log("Current open page is \"Custom game\"");
+      }
+   }
 }
 void WelcomeWindow::updateMarkerXPosition(int value)
 {
@@ -193,8 +207,10 @@ void WelcomeWindow::saveData()
 {
    QJsonDocument document;
    QJsonObject list;
+   bool needLoad = false;
    if (!data->exists()) {
       log("Data file is empty.");
+      needLoad = true;
    }
 
    //Records
@@ -213,12 +229,15 @@ void WelcomeWindow::saveData()
    list["WatchAllField"] = ui->checkBoxWatchAllField->isChecked();
    list["MusicVolume"] = MusicVolume;
    list["UiVolume"] = UiVolume;
+   list["UncorrectFlags"] = uncorrectFlags;
+   list["DefusedBombs"] = defusedCounter;
 
    document = QJsonDocument(list);
    data->open(QIODevice::WriteOnly);
    data->write(document.toJson());
    data->close();
    log("Data saved to data.json");
+   if (needLoad) loadData();
 }
 void WelcomeWindow::loadData()
 {
@@ -269,7 +288,11 @@ void WelcomeWindow::loadData()
       }
 
       //Settings
-      ui->checkBoxWatchAllField->setChecked(list["WatchAllField"].toBool());
+      if (list.contains("WatchAllField")) {
+         ui->checkBoxWatchAllField->setChecked(list["WatchAllField"].toBool());
+      } else {
+         log("Info about \"WatchAllField\" is not found.");
+      }
       if (list.contains("MusicVolume")) {
          MusicVolume = list["MusicVolume"].toDouble();
       } else {
@@ -280,43 +303,52 @@ void WelcomeWindow::loadData()
       } else {
          log("Info about \"UiVolume\" is not found.");
       }
+      if (list.contains("UncorrectFlags")) {
+         uncorrectFlags = list["UncorrectFlags"].toInt();
+      } else {
+         log("Info about \"UncorrectFlags\" is not found.");
+      }
+      if (list.contains("DefusedBombs")) {
+         defusedCounter = list["DefusedBombs"].toInt();
+      } else {
+         log("Info about \"DefusedBombs\" is not found.");
+      }
 
       ui->SliderMusicVolume->setSliderPosition(MusicVolume * 100);
       ui->SliderUiVolume->setSliderPosition(UiVolume * 100);
-
+      ui->labelDefusedCouner->setText(QString::number(defusedCounter));
+      ui->labelUncorrectFlagsCounter->setText(QString::number(uncorrectFlags));
    } else {
       log("Try to load. Data file is gone. Creating new...");
    }
+
    saveData();
 }
 QString WelcomeWindow::setTime(int h, int m, int s)
 {
-   QString time = "";
-   if (h != 0) {
-      if (h % 10 == 1 && h % 100 != 11)
-         time += QString::number(h) + " час ";
-      else if (h % 10 >= 2 && h % 10 <= 4 && (h % 100 < 12 || h % 100 > 14))
-         time += QString::number(h) + " часа ";
-      else
-         time += QString::number(h) + " часов ";
+   QStringList timeParts;
+   const char *units[][3] = {{"час", "часа", "часов"}, {"минута", "минуты", "минут"}, {"секунда", "секунды", "секунд"}};
+
+   int times[] = {h, m, s};
+
+   for (int i = 0; i < 3; ++i) {
+      if (times[i] != 0) {
+         int form = 2;
+         if (times[i] % 10 == 1 && times[i] % 100 != 11) {
+            form = 0;
+         } else if (times[i] % 10 >= 2 && times[i] % 10 <= 4 && (times[i] % 100 < 12 || times[i] % 100 > 14)) {
+            form = 1;
+         }
+         timeParts << QString("%1 %2").arg(times[i]).arg(units[i][form]);
+      }
    }
-   if (m != 0) {
-      if (m % 10 == 1 && m % 100 != 11)
-         time += QString::number(m) + " минута ";
-      else if (m % 10 >= 2 && m % 10 <= 4 && (m % 100 < 12 || m % 100 > 14))
-         time += QString::number(m) + " минуты ";
-      else
-         time += QString::number(m) + " минут ";
+
+   QString time = timeParts.join(" ");
+   if (time.isEmpty()) {
+      time = "0 секунд";
    }
-   if (s != 0) {
-      if (s % 10 == 1 && s % 100 != 11)
-         time += QString::number(s) + " секунда";
-      else if (s % 10 >= 2 && s % 10 <= 4 && (s % 100 < 12 || s % 100 > 14))
-         time += QString::number(s) + " секунды";
-      else
-         time += QString::number(s) + " секунд";
-   }
-   if (time == "") ui->labelPlayedTime->setText("0 секунд");
+
+   ui->labelPlayedTime->setText(time);
    return time;
 }
 void WelcomeWindow::log(const QString &message)
@@ -354,12 +386,14 @@ void WelcomeWindow::endGame(bool win)
    ui->labelAllGames->setText(QString::number(GamesCounter));
    ui->labelDefeats->setText(QString::number(Defeats));
    ui->labelWins->setText(QString::number(Wins));
-   if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((Wins / GamesCounter) * 100) + "%");
    if (win)
       log("Game End result - Win");
    else
       log("Game End result - Defeat");
    saveData();
+   double g = GamesCounter;
+   double w = Wins;
+   if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
 }
 WelcomeWindow::~WelcomeWindow()
 {
