@@ -78,21 +78,13 @@ void GameWindow::leftClick(int x, int y)
 
       // Дальше генерим цифры
       for (int i = 0; i < rows; i++) {
+         QString row;
          for (int j = 0; j < cols; j++) {
             if (Field[i][j] != 9) { // Если это не мина
                short int bombCounter = 0;
 
                // Массив смещений для проверки соседей
-               const int offsets[8][2] = {
-                  {-1, -1},
-                  {-1, 0},
-                  {-1, 1}, // Верхний левый, верхний, верхний правый
-                  {0, -1},
-                  {0, 1}, // Левый, правый
-                  {1, -1},
-                  {1, 0},
-                  {1, 1} // Нижний левый, нижний, нижний правый
-               };
+               const int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
                // Проверяем соседние ячейки
                for (const auto &offset : offsets) {
@@ -102,14 +94,24 @@ void GameWindow::leftClick(int x, int y)
                      bombCounter++;
                   }
                }
-
+               if (bombCounter == 0)
+                  buttons[i][j]->setStyleSheet(R"(
+                  QToolButton {
+                     background-color: #808080;
+                     border: none;
+                  }
+                  QToolButton:pressed {
+                     padding: 0px;
+                     margin: 0px;
+                  }
+                  )");
                Field[i][j] = bombCounter; // Устанавливаем количество бомб вокруг
-
-               log(QString("Created cell (x%1;y%2) value = %3").arg(i).arg(j).arg(bombCounter));
+               row += QString("[%1]").arg(Field[i][j]);
             } else {
-               log(QString("Created cell (x%1;y%2) value = bomb").arg(i).arg(j));
+               row += "[*]";
             }
          }
+         log(row);
       }
    }
 
@@ -424,6 +426,7 @@ void GameWindow::resizeEvent(QResizeEvent *event)
 void GameWindow::closeEvent(QCloseEvent *event)
 {
    timerSec->stop();
+   minetimer->stop();
    log("Game closing...");
    parent->saveData();
    event->accept();

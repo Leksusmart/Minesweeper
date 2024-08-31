@@ -3,13 +3,15 @@
 
 #include "WelcomeWindow.h"
 
+#include <QApplication>
 #include <QIcon>
 #include <QMainWindow>
+#include <QMouseEvent>
 #include <QPixmap>
 #include <QPushButton>
 #include <QTimer>
 #include <QVector>
-
+#include <QWidget>
 namespace Ui {
 class GameWindow;
 }
@@ -59,7 +61,10 @@ private:
    short int intervalCounter = 0;
    bool isTraining = false;
 public slots:
-   void log(const QString &message) { parent->log(message); };
+   void log(const QString &message)
+   {
+      parent->log(message);
+   };
 private slots:
    bool createButtonField();
    void resizeEvent(QResizeEvent *event) override;

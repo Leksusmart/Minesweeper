@@ -2,21 +2,25 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
-#include <QRegularExpression>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QScrollBar>
 #include <QSlider>
 #include <QString>
 #include <QTextStream>
 #include <QTimer>
+#include <QUrl>
+#include <QtCore>
 #include "./ui_Welcome.h"
 #include "GameWindow.h"
 #include "WelcomeWindow.h"
 #include "ui_Game.h"
-
 WelcomeWindow::WelcomeWindow(QMainWindow *parent)
     : ui(new Ui::WelcomeWindow)
 {
@@ -63,11 +67,18 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->SliderX->setMaximum(maxCols);
    ui->SliderY->setMaximum(maxRows);
 
-   connect(ui->btn_records, &QPushButton::clicked, this, [=] { showWidget(0); });
-   connect(ui->btn_settings, &QPushButton::clicked, this, [=] { showWidget(1); });
+   connect(ui->btn_records, &QPushButton::clicked, this, [=] {
+      showWidget(0);
+      log("User pressed \"Records\"");
+   });
+   connect(ui->btn_settings, &QPushButton::clicked, this, [=] {
+      showWidget(1);
+      log("User pressed \"Settings\"");
+   });
    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, [=] {
       if (ui->comboBox->currentIndex() == 6) {
          showWidget(2);
+         log("User open \"Custom game\"");
          int posX = ui->progressBarX->width() * 4 / ui->progressBarX->maximum() + ui->progressBarX->x();
          int posY = ui->progressBarX->y();
          markerX->move(posX - markerX->width() / 2, posY);
@@ -103,9 +114,48 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       }
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
    });
+   connect(ui->btn_sendError, &QPushButton::clicked, this, &WelcomeWindow::sendToTelegram);
+}
+void WelcomeWindow::sendToTelegram()
+{
+   QString errorMessage = ui->textFieldSendError->toPlainText();
+   QString filePath = QDir(QCoreApplication::applicationDirPath()).filePath("session.log");
+
+   // Читаем файл
+   QFile file(filePath);
+   if (!file.open(QIODevice::ReadOnly)) {
+      log(QString("Ошибка открытия файла: %1").arg(file.errorString()));
+      QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику");
+      return;
+   }
+
+   QString logContent = file.readAll(); // Читаем содержимое файла
+   file.close();
+   logContent = "Описание ошибки: " + errorMessage + "\n" + logContent;
+   QUrl url("http://192.168.84.6:5000/logs"); // URL вашего сервера
+   QNetworkRequest request(url);
+   request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+   QNetworkAccessManager *manager = new QNetworkAccessManager();
+   // Создаем данные для отправки
+   QByteArray postData;
+   postData.append("log_content=").append(QUrl::toPercentEncoding(logContent)); // Кодируем содержимое
+   // Отправляем запрос
+   QNetworkReply *reply = manager->post(request, postData);
+   QObject::connect(reply, &QNetworkReply::finished, this, [reply, this]() {
+      if (reply->error() == QNetworkReply::NoError) {
+         QMessageBox::information(this, "Успех", "Сервер подтвердил, что данные об ошибке успешно получены!");
+         ui->textFieldSendError->clear();
+      } else {
+         QMessageBox::warning(this,
+                              "Ошибка",
+                              "Увы, но ваши данные не попали к разработчику.\nПохоже сервер выключен!\nПроверьте подключение к интернету.");
+      }
+      reply->deleteLater();
+   });
 }
 void WelcomeWindow::startGame()
 {
+   log("User pressed \"Play\" button");
    GameWindow *Game;
    int rows = 0, cols = 0, mines = 0;
    QString message = "Error";
@@ -173,16 +223,6 @@ void WelcomeWindow::showWidget(int index)
    } else {
       ui->stackedWidget->setCurrentIndex(index);
       ui->stackedWidget->show();
-   }
-   if (!ui->stackedWidget->isHidden()) {
-      switch (ui->stackedWidget->currentIndex()) {
-      case 0: //Records
-         log("Current open page is \"Records\"");
-      case 1: //Settings
-         log("Current open page is \"Settings\"");
-      case 2: //Custom_game
-         log("Current open page is \"Custom game\"");
-      }
    }
 }
 void WelcomeWindow::updateMarkerXPosition(int value)

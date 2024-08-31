@@ -52,5 +52,6 @@ private slots:
    void showWidget(int index);
    void closeEvent(QCloseEvent *event) override;
    void startGame();
+   void sendToTelegram();
 };
-#endif // WELCO;MEWINDOW_H
+#endif // WELCOMEWINDOW_H

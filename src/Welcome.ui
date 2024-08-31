@@ -65,7 +65,7 @@ border-radius:5px;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="records">
      <widget class="QScrollArea" name="scrollAreaRecords">
@@ -600,7 +600,7 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-230</y>
          <width>316</width>
          <height>408</height>
         </rect>
@@ -1848,23 +1848,7 @@ QToolButton:hover {
     </hint>
     <hint type="destinationlabel">
      <x>170</x>
-     <y>163</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_sendError</sender>
-   <signal>clicked()</signal>
-   <receiver>textFieldSendError</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>247</x>
-     <y>296</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>190</x>
-     <y>184</y>
+     <y>172</y>
     </hint>
    </hints>
   </connection>
@@ -1876,11 +1860,11 @@ QToolButton:hover {
    <hints>
     <hint type="sourcelabel">
      <x>262</x>
-     <y>229</y>
+     <y>21</y>
     </hint>
     <hint type="destinationlabel">
      <x>316</x>
-     <y>229</y>
+     <y>21</y>
     </hint>
    </hints>
   </connection>
@@ -1892,11 +1876,11 @@ QToolButton:hover {
    <hints>
     <hint type="sourcelabel">
      <x>262</x>
-     <y>199</y>
+     <y>-31</y>
     </hint>
     <hint type="destinationlabel">
      <x>316</x>
-     <y>199</y>
+     <y>-31</y>
     </hint>
    </hints>
   </connection>
