@@ -60,25 +60,7 @@ private:
    short int minInterval = 50;
    short int openFieldCounter = 0;
    short int intervalCounter = 0;
-   bool isTraining = false;
 
-   int tutorialStep = -1;
-   QLabel *tutorialArrow = nullptr;
-   QLabel *tutorialArrow2 = nullptr;
-   QLabel *tutorialText;
-   QLabel *hightLight;
-   QImage rightArrow;
-   QImage leftArrow;
-   QImage arrow;
-   bool onceTraining = true;
-   short int num = NULL;
-   QLabel *borderl;
-   QLabel *borderu;
-   QLabel *borderr;
-   QLabel *borderd;
-   short int found2x = NULL;
-   short int found2y = NULL;
-   bool secondTry = false;
 public slots:
    void log(const QString &message)
    {
@@ -93,10 +75,6 @@ private slots:
    void rightClick(int x, int y);
    void endGame(bool win);
    void updateMineTimer();
-
-   void nextTutorialStep();
-   void initializeTutorial();
-   void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // GAMEWINDOW_H

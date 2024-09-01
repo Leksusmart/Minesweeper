@@ -26,6 +26,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
 {
    logFile->open(QIODevice::WriteOnly | QIODevice::Text);
    ui->setupUi(this);
+   ui->comboBox->setItemData(0, false, Qt::UserRole); //Убираем обучение
    timerSec->start(1000);
    ui->btn_records->setIcon(QIcon(":/images/cup.png"));
    ui->btn_records->setIconSize(QSize(25, 25));
@@ -46,6 +47,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    markerX->setStyleSheet("background-color: black;");
    markerY->setFixedSize(23, 2);
    markerY->setStyleSheet("background-color: black;");
+
    ui->labelAllGames->setText(QString::number(GamesCounter));
    ui->labelDefeats->setText(QString::number(Defeats));
    ui->labelWins->setText(QString::number(Wins));
@@ -76,6 +78,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       log("User pressed \"Settings\"");
    });
    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, [=] {
+      ui->btn_start->setEnabled(true);
       if (ui->comboBox->currentIndex() == 6) {
          showWidget(2);
          log("User open \"Custom game\"");
@@ -126,7 +129,7 @@ void WelcomeWindow::sendError()
    QFile file(filePath);
    if (!file.open(QIODevice::ReadOnly)) {
       log(QString("Ошибка открытия файла: %1").arg(file.errorString()));
-      QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику");
+      QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику. Ошибка при чтении файла session.log");
       return;
    }
 
@@ -158,9 +161,7 @@ void WelcomeWindow::sendError()
    QNetworkReply *reply3 = manager->post(request3, postData);
    QNetworkReply *reply4 = manager->post(request4, postData);
    QObject::connect(reply1, &QNetworkReply::finished, this, [reply1, this]() {
-      if (reply1->error() != QNetworkReply::NoError) {
-         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
-      } else {
+      if (reply1->error() == QNetworkReply::NoError) {
          QMessageBox::information(this,
                                   "Успех",
                                   "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
@@ -169,9 +170,7 @@ void WelcomeWindow::sendError()
       reply1->deleteLater();
    });
    QObject::connect(reply2, &QNetworkReply::finished, this, [reply2, this]() {
-      if (reply2->error() != QNetworkReply::NoError) {
-         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
-      } else {
+      if (reply2->error() == QNetworkReply::NoError) {
          QMessageBox::information(this,
                                   "Успех",
                                   "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
@@ -180,9 +179,7 @@ void WelcomeWindow::sendError()
       reply2->deleteLater();
    });
    QObject::connect(reply3, &QNetworkReply::finished, this, [reply3, this]() {
-      if (reply3->error() != QNetworkReply::NoError) {
-         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
-      } else {
+      if (reply3->error() == QNetworkReply::NoError) {
          QMessageBox::information(this,
                                   "Успех",
                                   "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
@@ -191,14 +188,11 @@ void WelcomeWindow::sendError()
       reply3->deleteLater();
    });
    QObject::connect(reply4, &QNetworkReply::finished, this, [reply4, this]() {
-      qDebug() << "YES";
       if (reply4->error() == QNetworkReply::NoError) {
          QMessageBox::information(this,
                                   "Успех",
                                   "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
          ui->textFieldSendError->clear();
-      } else {
-         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
       }
       reply4->deleteLater();
    });

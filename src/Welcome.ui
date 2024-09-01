@@ -600,7 +600,7 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-230</y>
+         <y>0</y>
          <width>316</width>
          <height>408</height>
         </rect>
@@ -1467,7 +1467,7 @@ QSlider::add-page:vertical {
    </widget>
    <widget class="QPushButton" name="btn_start">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
