@@ -18,6 +18,7 @@
         <file>button_question.png</file>
         <file>button_unpresseed.png</file>
         <file>button_armedbomb.png</file>
+        <file>tutorial_arrow.png</file>
     </qresource>
     <qresource prefix="/sounds"/>
 </RCC>

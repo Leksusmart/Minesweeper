@@ -5,12 +5,18 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDateTime>
+#include <QImage>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPixmap>
 #include <QPushButton>
 #include <QScreen>
 #include <QTimer>
 #include <QToolButton>
+#include <QTransform>
 #include <cstdlib> // Для srand и rand
 #include <ctime>
+
 GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QString message)
     : parent(parent)
     , ui(new Ui::GameWindow)
@@ -24,15 +30,397 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
    if (message == "Training") {
       isTraining = true;
       srand(0);
+      initializeTutorial();
+      nextTutorialStep();
    }
    ui->lcdNumberBombs->display(mines);
    ui->labelDifficult->setText(message);
-
    if (createButtonField()) log("Game starts: " + message);
 
    connect(timerSec, &QTimer::timeout, this, &GameWindow::secTimer);
    timerSec->start(1000);
    connect(minetimer, &QTimer::timeout, this, &GameWindow::updateMineTimer);
+}
+void GameWindow::initializeTutorial()
+{
+   log("initializeTutorial1");
+   tutorialArrow = new QLabel(this);
+   tutorialArrow2 = new QLabel(this);
+   QTransform transform;
+   transform.rotate(90);
+   arrow.load(":/images/tutorial_arrow.png");
+   rightArrow = arrow.transformed(transform);
+   transform.rotate(180);
+   leftArrow = arrow.transformed(transform);
+
+   tutorialArrow->setPixmap(QPixmap::fromImage(arrow));
+   tutorialArrow->setFixedSize(30, 31);
+   tutorialArrow->hide();
+   tutorialArrow2->hide();
+   borderl = new QLabel(this);
+   borderu = new QLabel(this);
+   borderr = new QLabel(this);
+   borderd = new QLabel(this);
+   borderl->setStyleSheet("background-color: orange;");
+   borderu->setStyleSheet("background-color: orange;");
+   borderr->setStyleSheet("background-color: orange;");
+   borderd->setStyleSheet("background-color: orange;");
+   borderl->setFixedSize(6, 87);
+   borderu->setFixedSize(87, 6);
+   borderr->setFixedSize(6, 87);
+   borderd->setFixedSize(87, 6);
+   borderl->hide();
+   borderu->hide();
+   borderr->hide();
+   borderd->hide();
+   log("initializeTutorial2");
+   tutorialText = new QLabel(this);
+   tutorialText->setStyleSheet("color:black;background-color: white; border: 1px solid black;");
+   tutorialText->setWordWrap(true);
+   tutorialText->hide();
+   log("initializeTutorial3");
+   tutorialStep = -1;
+
+   hightLight = new QLabel(this);
+   hightLight->setStyleSheet("QLabel { background-color: transparent; border: 6px solid orange; }");
+   hightLight->hide();
+}
+void GameWindow::nextTutorialStep()
+{
+   tutorialStep++;
+   log(QString("current tutorial step is %1").arg(tutorialStep));
+   QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
+   short int foundx = NULL;
+   short int foundy = NULL;
+   switch (tutorialStep) {
+   case 0:
+      tutorialText->show();
+      tutorialText->setFixedSize(160, 70);
+      tutorialText->setText("Добро пожаловать в обучение игре 'Сапер'! Давайте начнем с основ.");
+      tutorialText->move(this->rect().center() - tutorialText->rect().center());
+      tutorialText->show();
+      break;
+   case 1:
+      // Показать lcdNumberBombs
+      tutorialArrow->show();
+      tutorialArrow->move(ui->lcdNumberBombs->mapTo(this, QPoint(40, 35)));
+      tutorialText->setFixedSize(140, 50);
+      tutorialText->setText("Это счетчик бомб. Он показывает, сколько бомб предстоит найти.");
+      tutorialText->move(tutorialArrow->pos() + QPoint(-1 * tutorialText->width() / 2 + 15, 31));
+      break;
+   case 2:
+      // Показать lcdNumberMarked
+      tutorialArrow->move(ui->lcdNumberMarked->mapTo(this, QPoint(40, 35)));
+      tutorialText->setFixedSize(160, 70);
+      tutorialText->setText("Это счетчик отмеченных клеток. Он показывает, сколько клеток вы отметили флажками.");
+      tutorialText->move(tutorialArrow->pos() + QPoint(-1 * tutorialText->width() / 2, 31));
+      break;
+   case 3:
+      // Показать labelTime
+      tutorialArrow->move(ui->labelTime->mapTo(this, QPoint(10, 15)));
+      tutorialText->setText("Здесь отображается время с начала игры.");
+      tutorialText->setFixedSize(120, 50);
+      tutorialText->move(tutorialArrow->pos() + QPoint(-1 * tutorialText->width() / 2, 31));
+      break;
+   case 4:
+      // Показать поле (В общем плане, что это игровое поле)
+      tutorialArrow->setPixmap(QPixmap::fromImage(rightArrow));
+      tutorialArrow->setFixedSize(31, 30);
+      tutorialArrow->move(buttons[1][0]->mapTo(this, QPoint(-40, 13)));
+      tutorialText->setText("Это игровое поле. Здесь скрыты мины, которые вам нужно найти.");
+      tutorialText->setFixedSize(140, 50);
+      tutorialText->move(tutorialArrow->pos() + QPoint(-1 * tutorialText->width(), -1 * tutorialText->height() / 2 + 15));
+      hightLight->show();
+      hightLight->setFixedSize(162, 112);
+      hightLight->move(buttons[0][0]->mapTo(this, QPoint(-6, -6)));
+      break;
+   case 5:
+      // Рассказать цель игры
+      hightLight->hide();
+      tutorialArrow->hide();
+      tutorialText->setText(
+         "Ваша цель - открыть все клетки, не содержащие мины. Первое открытие всегда безопасноe. Нажмите на клетку, чтобы начать игру.");
+      tutorialText->setFixedSize(300, 60);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 80));
+
+      borderl->move(buttons[1][4]->mapTo(this, QPoint(-31, -31)));
+      borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+      borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+      borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+
+      borderl->show();
+      borderu->show();
+      borderr->show();
+      borderd->show();
+      break;
+   case 6:
+      // Этот шаг будет вызван после первого клика пользователя
+      // Показать ячейки с цифрами, рассказать о них
+      borderl->hide();
+      borderu->hide();
+      borderr->hide();
+      borderd->hide();
+      tutorialText->setText("Отлично! Теперь вы видите числа. Они показывают, сколько мин находится рядом с этой клеткой. Используйте эту "
+                            "информацию, чтобы определить, где могут быть мины. (Кликните, чтобы посмотреть пример)");
+      tutorialText->setFixedSize(320, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 80));
+      break;
+   case 7:
+      for (int i = 0; i < rows; i++) {
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() != unpressed.toImage()) {
+               QPixmap currentPixmap = buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize());
+               bool matchFound = false;
+               int number = 1;
+               for (const auto &pixmap : buttonPixmaps) {
+                  if (currentPixmap.toImage() == pixmap.toImage()) {
+                     matchFound = true;
+                     break;
+                  } else
+                     number++;
+               }
+               if (matchFound) {
+                  log("Training found number");
+                  int unpressedCounter = 0;
+                  short int all = 0;
+                  for (int dx = -1; dx <= 1; dx++) {
+                     for (int dy = -1; dy <= 1; dy++) {
+                        int nx = i + dx;
+                        int ny = j + dy;
+                        if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                           all++;
+                           if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()) {
+                              unpressedCounter++;
+                           }
+                        }
+                     }
+                  }
+                  QString BoolMessage = "false";
+                  if (number == unpressedCounter) BoolMessage = "true";
+                  log(QString("number(%1) == unpressedCounter(%3) == %4").arg(number).arg(unpressedCounter).arg(BoolMessage));
+                  if (number == unpressedCounter && all == 9) {
+                     foundx = i;
+                     foundy = j;
+                     num = number;
+                     goto found;
+                  } else if (number == unpressedCounter) {
+                     foundx = i;
+                     foundy = j;
+                     num = number;
+                  }
+               }
+            }
+         }
+      }
+   found:
+      if (foundx != NULL) {
+         if (num == 1)
+            tutorialText->setText(
+               QString(
+                  "Например, в этой клетке написано %1 - это значит что рядом с ней в радиусе 3x3 есть %1 мина. Отметьте эту мину флажком, чтобы "
+                  "знать что она тут есть и случайно не нажать на неё.\nДля этого щёлкните правым щелчком мыши по клетке 1 раз или можете "
+                  "кликнуть (правым щелчком) по цифре.")
+                  .arg(num));
+         else if (num < 5)
+            tutorialText->setText(
+               QString(
+                  "Например, в этой клетке написано %1 - это значит что рядом с ней в радиусе 3x3 есть %1 мины. Отметьте эти мины флажком, чтобы "
+                  "знать что они тут есть и случайно не нажать на них.\nДля этого щёлкните правым щелчком мыши по 1 разу на клетку или можете "
+                  "кликнуть (правым щелчком) по цифре.")
+                  .arg(num));
+         else
+            tutorialText->setText(
+               QString("Например, в этой клетке написано %1 - это значит что рядом с ней в радиусе 3x3 есть %1 мин. Отметьте эти мины флажком, чтобы "
+                       "знать что они тут есть и случайно не нажать на них.\nДля этого щёлкните правым щелчком мыши по 1 разу на клетку или можете "
+                       "кликнуть (правым щелчком) по цифре.")
+                  .arg(num));
+         tutorialText->setFixedSize(430, 80);
+         tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 86));
+
+         borderl->move(buttons[foundx][foundy]->mapTo(this, QPoint(-31, -31)));
+         borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+         borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+         borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+
+         borderl->show();
+         borderu->show();
+         borderr->show();
+         borderd->show();
+      } else {
+         for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+               if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() != unpressed.toImage()) {
+                  QPixmap currentPixmap = buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize());
+                  bool matchFound = false;
+                  int number = 1;
+                  for (const auto &pixmap : buttonPixmaps) {
+                     if (currentPixmap.toImage() == pixmap.toImage()) {
+                        matchFound = true;
+                        break;
+                     } else
+                        number++;
+                  }
+                  if (matchFound) {
+                     if (number == 1) {
+                        log("Training found number secondTry");
+                        int unpressedCounter = 0;
+                        for (int dx = -1; dx <= 1; dx++) {
+                           for (int dy = -1; dy <= 1; dy++) {
+                              int nx = i + dx;
+                              int ny = j + dy;
+                              if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                                 if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()) {
+                                    unpressedCounter++;
+                                 }
+                              }
+                           }
+                        }
+                        QString BoolMessage = "false";
+                        if (number + 1 == unpressedCounter) BoolMessage = "true";
+                        log(QString("number(1) + 1 == unpressedCounter(%3) == %4").arg(number).arg(unpressedCounter).arg(BoolMessage));
+                        if (number + 1 == unpressedCounter) {
+                           foundx = i;
+                           foundy = j;
+                           num = number;
+                        }
+                     }
+                  }
+               }
+            }
+         }
+         tutorialText->setText("Например, у этой единички рядом две клетки. Мы не можем знать наверняка в какой клетке бомба, но она точно в одной "
+                               "из них. Пометьте их знаком вопроса, щёлкнув по клеткам 2 раза правой кнопрой мыши.");
+         tutorialText->setFixedSize(330, 70);
+         tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 86));
+
+         borderl->setStyleSheet("background-color: orange;");
+         borderu->setStyleSheet("background-color: orange;");
+         borderr->setStyleSheet("background-color: orange;");
+         borderd->setStyleSheet("background-color: orange;");
+         borderl->setFixedSize(6, 87);
+         borderu->setFixedSize(87, 6);
+         borderr->setFixedSize(6, 87);
+         borderd->setFixedSize(87, 6);
+
+         borderl->move(buttons[foundx][foundy]->mapTo(this, QPoint(-31, -31)));
+         borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+         borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+         borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+
+         borderl->show();
+         borderu->show();
+         borderr->show();
+         borderd->show();
+         secondTry = true;
+      }
+
+      break;
+   case 8:
+      // Этот шаг будет вызван после того, как пользователь поставит флажок
+      if (num == 1)
+         tutorialText->setText("Отлично! Вы отметили предполагаемую клетку с миной. Следуя такому правилу продолжайте помечать мины.");
+      else
+         tutorialText->setText("Отлично! Вы отметили предполагаемые клетки с минами. Следуя такому правилу продолжайте помечать мины.");
+      tutorialText->setFixedSize(220, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 76));
+      borderl->hide();
+      borderu->hide();
+      borderr->hide();
+      borderd->hide();
+      break;
+   case 9:
+      tutorialText->show();
+      tutorialText->setText("У этой мины уже отмечено рядом то количество мин, которое на ней написано. Значит неотмеченные клетки можно открыть.");
+      tutorialText->setFixedSize(220, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 76));
+      borderl->move(buttons[found2x][found2y]->mapTo(this, QPoint(-31, -31)));
+      borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+      borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+      borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+
+      borderl->show();
+      borderu->show();
+      borderr->show();
+      borderd->show();
+      break;
+   case 10:
+      tutorialArrow->show();
+      tutorialArrow->move(ui->lcdNumberBombs->mapTo(this, QPoint(67, 2)));
+      tutorialArrow->setPixmap(QPixmap::fromImage(leftArrow));
+      tutorialArrow->setFixedSize(30, 31);
+      tutorialArrow2->setPixmap(QPixmap::fromImage(arrow));
+      tutorialArrow2->setFixedSize(30, 31);
+      tutorialArrow2->show();
+      tutorialArrow2->move(ui->lcdNumberMarked->mapTo(this, QPoint(40, 35)));
+
+      tutorialText->show();
+      tutorialText->setText("Бывают такие ситуации когда количество мин совпадает с количеством флажков на поле. Если вы верно расставляли "
+                            "флажки, то можете спокойно открыть все неоткрытые клетки. Иначе вы проиграете.");
+      tutorialText->setFixedSize(330, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 86));
+      break;
+   case 11:
+      for (int i = 0; i < rows; i++) {
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() != unpressed.toImage()) {
+               QPixmap currentPixmap = buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize());
+               bool matchFound = false;
+               int number = 1;
+               for (const auto &pixmap : buttonPixmaps) {
+                  if (currentPixmap.toImage() == pixmap.toImage()) {
+                     matchFound = true;
+                     break;
+                  } else
+                     number++;
+               }
+               if (matchFound) {
+                  if (number == 1) {
+                     log("Training found number secondTry");
+                     int questionCounter = 0;
+                     int unpressedCounter = 0;
+                     for (int dx = -1; dx <= 1; dx++) {
+                        for (int dy = -1; dy <= 1; dy++) {
+                           int nx = i + dx;
+                           int ny = j + dy;
+                           if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                              if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == question.toImage()) {
+                                 questionCounter++;
+                              } else if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()) {
+                                 unpressedCounter++;
+                              }
+                           }
+                        }
+                     }
+                     if (number + unpressedCounter == questionCounter) {
+                        foundx = i;
+                        foundy = j;
+                     }
+                  }
+               }
+            }
+         }
+      }
+      tutorialText->setText("А для этой единички мина находится там же где и для первой, значит можно открыть непомеченную клетку.");
+      tutorialText->setFixedSize(200, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 86));
+
+      borderl->move(buttons[foundx][foundy]->mapTo(this, QPoint(-31, -31)));
+      borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+      borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+      borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+      break;
+   case 12:
+      tutorialText->setText("Теперь у двойки можно пометить две мины и убрать сомнения по расположению бомб у единичек.\nПродолжайте игру, используя "
+                            "все изученные приемы. Удачи!");
+      tutorialText->setFixedSize(300, 70);
+      tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 86));
+
+      borderl->move(buttons[1][2]->mapTo(this, QPoint(-31, -31)));
+      borderu->move(borderl->mapTo(this, QPoint(0, 0)));
+      borderr->move(borderl->mapTo(this, QPoint(81, 0)));
+      borderd->move(borderl->mapTo(this, QPoint(0, 81)));
+      break;
+   }
 }
 void GameWindow::leftClick(int x, int y)
 {
@@ -41,6 +429,22 @@ void GameWindow::leftClick(int x, int y)
    QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    if (currentPixmap.toImage() == flag.toImage()) return;
 
+   if (once && message == "Training" && tutorialStep == 5
+       && ((x == 1 && y == 0) || (x == 2 && y == 0) || (x == 3 && y == 0) || (x == 2 && y == 1) || (x == 3 && y == 1) || (x == 3 && y == 2)
+           || (x == 3 && y == 5)))
+      return;
+   if (message == "Training" && tutorialStep == 7) return;
+   if (message == "Training" && (tutorialStep < 5 || tutorialStep == 6)) {
+      nextTutorialStep();
+      return;
+   }
+   if (message == "Training" && (tutorialStep == 8 || tutorialStep == 9)) {
+      tutorialText->hide();
+      borderl->hide();
+      borderu->hide();
+      borderr->hide();
+      borderd->hide();
+   }
    if (once) {
       once = false;
       int startx = x;
@@ -127,6 +531,7 @@ void GameWindow::leftClick(int x, int y)
    }
 
    if (matchFound) {
+      log("Left click on number");
       int flagCounter = 0;
       int unpressedCounter = 0;
       for (int dx = -1; dx <= 1; dx++) {
@@ -142,6 +547,9 @@ void GameWindow::leftClick(int x, int y)
             }
          }
       }
+      QString BoolMessage = "false";
+      if (number == flagCounter) BoolMessage = "true";
+      log(QString("number(%1) == flags(%3) == %4").arg(number).arg(flagCounter).arg(BoolMessage));
       if (number == flagCounter) {
          for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -193,11 +601,69 @@ void GameWindow::leftClick(int x, int y)
             }
          }
       } else {
-         buttons[x][y]->setIcon(QIcon(":/images/button_armedbomb.png"));
+         buttons[x][y]->setIcon(armedbomb);
          endGame(false);
       }
    }
+   if (message == "Training" && tutorialStep == 5) {
+      if (onceTraining) {
+         onceTraining = false;
+         QTimer::singleShot(300, this, &GameWindow::nextTutorialStep);
+      }
+   }
+   if (ui->lcdNumberBombs->value() == ui->lcdNumberMarked->value()) {
+      if (tutorialStep != 9) tutorialStep = 9;
+      nextTutorialStep();
+      return;
+   }
+   if (message == "Training" && tutorialStep == 11) {
+      nextTutorialStep();
+      return;
+   }
    //проверка на победу
+   if (message == "Training" && (tutorialStep == 8 || tutorialStep == 12)) {
+      QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
+      for (int i = 0; i < rows; i++) {
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() != unpressed.toImage()) {
+               QPixmap currentPixmap = buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize());
+               bool matchFound = false;
+               int number = 1;
+               for (const auto &pixmap : buttonPixmaps) {
+                  if (currentPixmap.toImage() == pixmap.toImage()) {
+                     matchFound = true;
+                     break;
+                  } else
+                     number++;
+               }
+               if (matchFound) {
+                  int flagCounter = 0;
+                  int unpressedCounter = 0;
+                  for (int dx = -1; dx <= 1; dx++) {
+                     for (int dy = -1; dy <= 1; dy++) {
+                        int nx = i + dx;
+                        int ny = j + dy;
+                        if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                           if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()) {
+                              unpressedCounter++;
+                           } else if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == flag.toImage()) {
+                              flagCounter++;
+                           }
+                        }
+                     }
+                  }
+                  if (number == flagCounter && unpressedCounter > 0) {
+                     found2x = i;
+                     found2y = j;
+                     if (tutorialStep != 8) tutorialStep = 8;
+                     nextTutorialStep();
+                     return;
+                  }
+               }
+            }
+         }
+      }
+   }
    if (rows * cols - mines == openFieldCounter) {
       endGame(true);
       return;
@@ -210,6 +676,10 @@ void GameWindow::rightClick(int x, int y)
    QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
    bool matchFound = false;
 
+   if (message == "Training" && tutorialStep < 7) {
+      return;
+   }
+
    for (const auto &pixmap : buttonPixmaps) {
       if (currentPixmap.toImage() == pixmap.toImage()) {
          matchFound = true;
@@ -218,6 +688,7 @@ void GameWindow::rightClick(int x, int y)
    }
 
    if (matchFound) {
+      log("Right click on number");
       int flagCounter = 0;
       int unpressedCounter = 0;
       for (int dx = -1; dx <= 1; dx++) {
@@ -235,11 +706,15 @@ void GameWindow::rightClick(int x, int y)
       }
       int number = 0;
       for (int i = 1; i <= 8; ++i) {
-         if (currentPixmap.toImage() == QPixmap(QString(":/images/button_%1.png").arg(i)).toImage()) {
+         QPixmap buttonPixmap = QIcon(QString(":/images/button_%1.png").arg(i)).pixmap(QSize(25, 25));
+         if (currentPixmap.toImage() == buttonPixmap.toImage()) {
             number = i;
             break;
          }
       }
+      QString BoolMessage = "false";
+      if (number == unpressedCounter + flagCounter) BoolMessage = "true";
+      log(QString("number(%1) == unpressed(%2) + flags(%3) == %4").arg(number).arg(unpressedCounter).arg(flagCounter).arg(BoolMessage));
       if (number == unpressedCounter + flagCounter) {
          for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -267,8 +742,12 @@ void GameWindow::rightClick(int x, int y)
             margin: 0px;
          }
          )");
+      log(QString("set flag on x%1y%2").arg(x).arg(y));
    } else if (currentPixmap.toImage() == flag.toImage()) {
       ui->lcdNumberMarked->display(ui->lcdNumberMarked->value() - 1);
+      buttons[x][y]->setIcon(question);
+      log(QString("set question on x%1y%2").arg(x).arg(y));
+   } else if (currentPixmap.toImage() == question.toImage()) {
       buttons[x][y]->setIcon(unpressed);
       buttons[x][y]->setStyleSheet(R"(
          QToolButton {
@@ -282,10 +761,96 @@ void GameWindow::rightClick(int x, int y)
             margin-right: -1px;
          }
          )");
+      log(QString("remove question on x%1y%2").arg(x).arg(y));
    }
+
+   if (message == "Training" && tutorialStep == 7 && secondTry == false) {
+      short int flaged = 0;
+      for (int i = 0; i < rows; i++)
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() == flag.toImage()) flaged++;
+         }
+      if (num == flaged) {
+         nextTutorialStep();
+      }
+   } else if (message == "Training" && tutorialStep == 7 && secondTry == true) {
+      short int questions = 0;
+      for (int i = 0; i < rows; i++)
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() == question.toImage()) questions++;
+         }
+      if (num + 1 == questions) {
+         tutorialStep = 10;
+         nextTutorialStep();
+      }
+   }
+   if (message == "Training" && ui->lcdNumberBombs->value() == ui->lcdNumberMarked->value()) {
+      if (tutorialStep != 9) tutorialStep = 9;
+      nextTutorialStep();
+   }
+}
+void GameWindow::mousePressEvent(QMouseEvent *event)
+{
+   if (message == "Training" && event->button() == Qt::LeftButton && (tutorialStep < 5 || tutorialStep == 6)) {
+      nextTutorialStep();
+   }
+   if (message == "Training" && tutorialStep == 12) {
+      tutorialText->hide();
+      borderl->hide();
+      borderu->hide();
+      borderr->hide();
+      borderd->hide();
+   }
+   if (message == "Training" && (tutorialStep == 8 || tutorialStep == 12)) {
+      QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
+      for (int i = 0; i < rows; i++) {
+         for (int j = 0; j < cols; j++) {
+            if (buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize()).toImage() != unpressed.toImage()) {
+               QPixmap currentPixmap = buttons[i][j]->icon().pixmap(buttons[i][j]->iconSize());
+               bool matchFound = false;
+               int number = 1;
+               for (const auto &pixmap : buttonPixmaps) {
+                  if (currentPixmap.toImage() == pixmap.toImage()) {
+                     matchFound = true;
+                     break;
+                  } else
+                     number++;
+               }
+               if (matchFound) {
+                  int flagCounter = 0;
+                  int unpressedCounter = 0;
+                  for (int dx = -1; dx <= 1; dx++) {
+                     for (int dy = -1; dy <= 1; dy++) {
+                        int nx = i + dx;
+                        int ny = j + dy;
+                        if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
+                           if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()) {
+                              unpressedCounter++;
+                           } else if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == flag.toImage()) {
+                              flagCounter++;
+                           }
+                        }
+                     }
+                  }
+                  if (number == flagCounter && unpressedCounter > 0) {
+                     found2x = i;
+                     found2y = j;
+                     if (tutorialStep != 8) tutorialStep = 8;
+                     nextTutorialStep();
+                     return;
+                  }
+               }
+            }
+         }
+      }
+   }
+   QMainWindow::mousePressEvent(event);
 }
 void GameWindow::endGame(bool win)
 {
+   log("EndGame");
+   if (tutorialArrow != nullptr) tutorialArrow->hide();
+   if (tutorialArrow2 != nullptr) tutorialArrow2->hide();
    timerSec->stop(); // Останавливаем таймер
    ui->labelStaticTime->setText("Итого:");
    qint64 lastseconds = ((parent->hours * 60) + parent->minutes) * 60 + parent->seconds;
@@ -353,10 +918,29 @@ void GameWindow::endGame(bool win)
                parent->ui->labelDefusedCouner->setText(QString::number(parent->defusedCounter));
             }
          }
+      if (message == "Training") {
+         tutorialText->show();
+         tutorialText->setText(
+            "Поздравляем! Вы успешно завершили обучение. Теперь вы готовы играть в 'Сапер' самостоятельно! Нажмите кнопку закрыть, чтобы выйти.");
+         tutorialText->setFixedSize(300, 60);
+         tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 76));
+      }
 
    } else {
       minetimer->start(interval);
+      if (message == "Training") {
+         tutorialText->show();
+         tutorialText->setText("Проигрыш! Надеюсь вы поняли причину своего поражения. В игре 'Сапер' важно быть внимательным и логичным. "
+                               "В следующий раз получится! Нажмите кнопку закрыть, чтобы выйти.");
+         tutorialText->setFixedSize(300, 68);
+         tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 80));
+      }
    }
+
+   delete borderl;
+   delete borderu;
+   delete borderr;
+   delete borderd;
    ui->btn_exit->setText("Закрыть");
    parent->endGame(win);
 }
@@ -421,6 +1005,9 @@ void GameWindow::resizeEvent(QResizeEvent *event)
       for (int j = 0; j < cols; ++j) {
          buttons[i][j]->setGeometry(startX + j * 25, startY + i * 25, 25, 25);
       }
+   }
+   if (tutorialText && tutorialText->isVisible()) {
+      tutorialText->move(this->rect().center() - tutorialText->rect().center());
    }
 }
 void GameWindow::closeEvent(QCloseEvent *event)

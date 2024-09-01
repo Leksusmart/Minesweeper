@@ -114,9 +114,9 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       }
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
    });
-   connect(ui->btn_sendError, &QPushButton::clicked, this, &WelcomeWindow::sendToTelegram);
+   connect(ui->btn_sendError, &QPushButton::clicked, this, &WelcomeWindow::sendError);
 }
-void WelcomeWindow::sendToTelegram()
+void WelcomeWindow::sendError()
 {
    QString errorMessage = ui->textFieldSendError->toPlainText();
    QString filePath = QDir(QCoreApplication::applicationDirPath()).filePath("session.log");
