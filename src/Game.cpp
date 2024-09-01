@@ -330,8 +330,9 @@ void GameWindow::nextTutorialStep()
       break;
    case 9:
       tutorialText->show();
-      tutorialText->setText("У этой мины уже отмечено рядом то количество мин, которое на ней написано. Значит неотмеченные клетки можно открыть.");
-      tutorialText->setFixedSize(220, 70);
+      tutorialText->setText("У этой мины уже отмечено рядом то количество мин, которое на ней написано. Значит неотмеченные клетки можно открыть, "
+                            "нажав на клетку или на цифру");
+      tutorialText->setFixedSize(250, 70);
       tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 76));
       borderl->move(buttons[found2x][found2y]->mapTo(this, QPoint(-31, -31)));
       borderu->move(borderl->mapTo(this, QPoint(0, 0)));
@@ -605,6 +606,11 @@ void GameWindow::leftClick(int x, int y)
          endGame(false);
       }
    }
+   //проверка на победу
+   if (rows * cols - mines == openFieldCounter) {
+      endGame(true);
+      return;
+   }
    if (message == "Training" && tutorialStep == 5) {
       if (onceTraining) {
          onceTraining = false;
@@ -620,7 +626,7 @@ void GameWindow::leftClick(int x, int y)
       nextTutorialStep();
       return;
    }
-   //проверка на победу
+
    if (message == "Training" && (tutorialStep == 8 || tutorialStep == 12)) {
       QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
       for (int i = 0; i < rows; i++) {
@@ -663,10 +669,6 @@ void GameWindow::leftClick(int x, int y)
             }
          }
       }
-   }
-   if (rows * cols - mines == openFieldCounter) {
-      endGame(true);
-      return;
    }
 }
 void GameWindow::rightClick(int x, int y)
@@ -849,6 +851,7 @@ void GameWindow::mousePressEvent(QMouseEvent *event)
 void GameWindow::endGame(bool win)
 {
    log("EndGame");
+   GameEnd = true;
    if (tutorialArrow != nullptr) tutorialArrow->hide();
    if (tutorialArrow2 != nullptr) tutorialArrow2->hide();
    timerSec->stop(); // Останавливаем таймер
@@ -880,7 +883,7 @@ void GameWindow::endGame(bool win)
          }
       }
    }
-   GameEnd = true;
+
    for (int x = 0; x < rows; x++)
       for (int y = 0; y < cols; y++) {
          QPixmap currentPixmap = buttons[x][y]->icon().pixmap(QSize(25, 25));
@@ -936,11 +939,6 @@ void GameWindow::endGame(bool win)
          tutorialText->move(this->rect().center() - tutorialText->rect().center() - QPoint(0, 80));
       }
    }
-
-   delete borderl;
-   delete borderu;
-   delete borderr;
-   delete borderd;
    ui->btn_exit->setText("Закрыть");
    parent->endGame(win);
 }
