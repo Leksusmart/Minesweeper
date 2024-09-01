@@ -118,6 +118,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
 }
 void WelcomeWindow::sendError()
 {
+   log("Попытка отправки Ошибки");
    QString errorMessage = ui->textFieldSendError->toPlainText();
    QString filePath = QDir(QCoreApplication::applicationDirPath()).filePath("session.log");
 
@@ -132,7 +133,7 @@ void WelcomeWindow::sendError()
    QString logContent = file.readAll(); // Читаем содержимое файла
    file.close();
    logContent = "Описание ошибки: " + errorMessage + "\n" + logContent;
-   QUrl url("http://192.168.84.6:5000/logs"); // URL вашего сервера
+   QUrl url("http://192.168.1.220:5000/logs"); // URL вашего сервера
    QNetworkRequest request(url);
    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
    QNetworkAccessManager *manager = new QNetworkAccessManager();
