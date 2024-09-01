@@ -39,7 +39,6 @@ private:
    QTimer *timerSec = new QTimer(this);
    double MusicVolume = 0.25;
    double UiVolume = 0.25;
-
 public slots:
    void log(const QString &message);
    void saveData();

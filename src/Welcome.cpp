@@ -130,28 +130,77 @@ void WelcomeWindow::sendError()
       return;
    }
 
-   QString logContent = file.readAll(); // Читаем содержимое файла
+   // Создаем данные для отправки
+   QString logContent = file.readAll();
    file.close();
    logContent = "Описание ошибки: " + errorMessage + "\n" + logContent;
-   QUrl url("http://192.168.1.220:5000/logs"); // URL вашего сервера
-   QNetworkRequest request(url);
-   request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-   QNetworkAccessManager *manager = new QNetworkAccessManager();
-   // Создаем данные для отправки
    QByteArray postData;
    postData.append("log_content=").append(QUrl::toPercentEncoding(logContent)); // Кодируем содержимое
+   QNetworkAccessManager *manager = new QNetworkAccessManager();
+
+   QUrl url1("http://192.168.1.220:5000/logs"); //Основной адрес
+   QUrl url2("http://10.8.0.5:5000/logs");      //Запасной
+   QUrl url3("http://192.168.84.6:5000/logs");  //Запасной
+   QUrl url4("http://192.168.1.138:5000/logs"); //Запасной
+
+   QNetworkRequest request1(url1);
+   request1.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+   QNetworkRequest request2(url2);
+   request2.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+   QNetworkRequest request3(url3);
+   request3.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+   QNetworkRequest request4(url4);
+   request4.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+
    // Отправляем запрос
-   QNetworkReply *reply = manager->post(request, postData);
-   QObject::connect(reply, &QNetworkReply::finished, this, [reply, this]() {
-      if (reply->error() == QNetworkReply::NoError) {
-         QMessageBox::information(this, "Успех", "Сервер подтвердил, что данные об ошибке успешно получены!");
+   QNetworkReply *reply1 = manager->post(request1, postData);
+   QNetworkReply *reply2 = manager->post(request2, postData);
+   QNetworkReply *reply3 = manager->post(request3, postData);
+   QNetworkReply *reply4 = manager->post(request4, postData);
+   QObject::connect(reply1, &QNetworkReply::finished, this, [reply1, this]() {
+      if (reply1->error() != QNetworkReply::NoError) {
+         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
+      } else {
+         QMessageBox::information(this,
+                                  "Успех",
+                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
+         ui->textFieldSendError->clear();
+      }
+      reply1->deleteLater();
+   });
+   QObject::connect(reply2, &QNetworkReply::finished, this, [reply2, this]() {
+      if (reply2->error() != QNetworkReply::NoError) {
+         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
+      } else {
+         QMessageBox::information(this,
+                                  "Успех",
+                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
+         ui->textFieldSendError->clear();
+      }
+      reply2->deleteLater();
+   });
+   QObject::connect(reply3, &QNetworkReply::finished, this, [reply3, this]() {
+      if (reply3->error() != QNetworkReply::NoError) {
+         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
+      } else {
+         QMessageBox::information(this,
+                                  "Успех",
+                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
+         ui->textFieldSendError->clear();
+      }
+      reply3->deleteLater();
+   });
+   QObject::connect(reply4, &QNetworkReply::finished, this, [reply4, this]() {
+      qDebug() << "YES";
+      if (reply4->error() == QNetworkReply::NoError) {
+         QMessageBox::information(this,
+                                  "Успех",
+                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
          ui->textFieldSendError->clear();
       } else {
-         QMessageBox::warning(this,
-                              "Ошибка",
-                              "Увы, но ваши данные не попали к разработчику.\nПохоже сервер выключен!\nПроверьте подключение к интернету.");
+         QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику.\nПроверьте подключение к интернету.");
       }
-      reply->deleteLater();
+      reply4->deleteLater();
    });
 }
 void WelcomeWindow::startGame()
