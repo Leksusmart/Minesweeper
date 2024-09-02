@@ -26,7 +26,13 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
 {
    logFile->open(QIODevice::WriteOnly | QIODevice::Text);
    ui->setupUi(this);
-   ui->comboBox->setItemData(0, false, Qt::UserRole); //Убираем обучение
+   //Убираем обучение
+   ui->comboBox->removeItem(0);
+
+   //Убираем отправление ошибки
+   ui->labelStaticSettingsSendError->hide();
+   ui->groupBoxSendError->hide();
+
    timerSec->start(1000);
    ui->btn_records->setIcon(QIcon(":/images/cup.png"));
    ui->btn_records->setIconSize(QSize(25, 25));
@@ -79,7 +85,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    });
    connect(ui->comboBox, &QComboBox::currentIndexChanged, this, [=] {
       ui->btn_start->setEnabled(true);
-      if (ui->comboBox->currentIndex() == 6) {
+      if (ui->comboBox->currentText() == "Своя") {
          showWidget(2);
          log("User open \"Custom game\"");
          int posX = ui->progressBarX->width() * 4 / ui->progressBarX->maximum() + ui->progressBarX->x();
@@ -88,8 +94,6 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
          posY = (ui->progressBarY->height() * 4 / ui->progressBarY->maximum()) + ui->progressBarY->y();
          posX = ui->progressBarY->x();
          markerY->move(posX, posY - markerY->height() / 2);
-      } else if (ui->comboBox->currentIndex() != 6 && ui->stackedWidget->currentIndex() == 2 && !ui->stackedWidget->isHidden()) {
-         ui->stackedWidget->hide();
       }
    });
    connect(ui->SliderX, &QSlider::valueChanged, this, [=](int value) {
@@ -142,125 +146,86 @@ void WelcomeWindow::sendError()
    QNetworkAccessManager *manager = new QNetworkAccessManager();
 
    QUrl url1("http://192.168.1.220:5000/logs"); //Основной адрес
-   QUrl url2("http://10.8.0.5:5000/logs");      //Запасной
-   QUrl url3("http://192.168.84.6:5000/logs");  //Запасной
-   QUrl url4("http://192.168.1.138:5000/logs"); //Запасной
 
-   QNetworkRequest request1(url1);
-   request1.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-   QNetworkRequest request2(url2);
-   request2.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-   QNetworkRequest request3(url3);
-   request3.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-   QNetworkRequest request4(url4);
-   request4.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+   QNetworkRequest request(url1);
 
    // Отправляем запрос
-   QNetworkReply *reply1 = manager->post(request1, postData);
-   QNetworkReply *reply2 = manager->post(request2, postData);
-   QNetworkReply *reply3 = manager->post(request3, postData);
-   QNetworkReply *reply4 = manager->post(request4, postData);
-   QObject::connect(reply1, &QNetworkReply::finished, this, [reply1, this]() {
-      if (reply1->error() == QNetworkReply::NoError) {
+   QNetworkReply *reply = manager->post(request, postData);
+
+   QObject::connect(reply, &QNetworkReply::finished, this, [reply, this]() {
+      if (reply->error() == QNetworkReply::NoError) {
          QMessageBox::information(this,
                                   "Успех",
                                   "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
          ui->textFieldSendError->clear();
+      } else {
+         QMessageBox::warning(this, "Ошибка", "Данные об ошибке не были отправлены разработчику. Проверьте подключение к интернету.");
+         QObject::disconnect(reply, &QNetworkReply::finished, this, nullptr);
       }
-      reply1->deleteLater();
-   });
-   QObject::connect(reply2, &QNetworkReply::finished, this, [reply2, this]() {
-      if (reply2->error() == QNetworkReply::NoError) {
-         QMessageBox::information(this,
-                                  "Успех",
-                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
-         ui->textFieldSendError->clear();
-      }
-      reply2->deleteLater();
-   });
-   QObject::connect(reply3, &QNetworkReply::finished, this, [reply3, this]() {
-      if (reply3->error() == QNetworkReply::NoError) {
-         QMessageBox::information(this,
-                                  "Успех",
-                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
-         ui->textFieldSendError->clear();
-      }
-      reply3->deleteLater();
-   });
-   QObject::connect(reply4, &QNetworkReply::finished, this, [reply4, this]() {
-      if (reply4->error() == QNetworkReply::NoError) {
-         QMessageBox::information(this,
-                                  "Успех",
-                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
-         ui->textFieldSendError->clear();
-      }
-      reply4->deleteLater();
+      reply->deleteLater();
    });
 }
 void WelcomeWindow::startGame()
 {
    log("User pressed \"Play\" button");
-   GameWindow *Game;
+   ui->btn_start->setEnabled(false);
    int rows = 0, cols = 0, mines = 0;
    QString message = "Error";
-   switch (ui->comboBox->currentIndex()) {
-   case 0: //Обучение
+   QString text = ui->comboBox->currentText();
+
+   if (text == "Обучение") {
       rows = 4;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Training";
-      break;
-   case 1: //Лёгкая
+   } else if (text == "Лёгкая") {
       rows = 4;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Easy";
-      break;
-   case 2: //Средняя
+   } else if (text == "Средняя") {
       rows = 7;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Medium";
-      break;
-   case 3: //Сложная
+   } else if (text == "Сложная") {
       rows = 10;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Hard";
-      break;
-   case 4: //Экстрим
+   } else if (text == "Экстрим") {
       rows = 14;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Extreme";
-      break;
-   case 5: //Безумие
+   } else if (text == "Безумие") {
       rows = 20;
       cols = rows * 1.55;
       mines = rows * cols * 0.2;
       message = "Insane";
-      break;
-   case 6: //Своя игра
+   } else if (text == "Своя") {
       rows = ui->progressBarY->value();
       cols = ui->progressBarX->value();
       mines = rows * cols * (ui->spinBoxMinesFill->value() / 100.0);
       message = "Custom";
-      break;
-   default:
-      log("ComboBox switch Error");
-      break;
    }
-   Game = new GameWindow(this, rows, cols, mines, message);
-   Game->ui->groupBoxGameField->setMinimumSize(cols * 25, rows * 25);
-   Game->setMinimumSize(cols * 25 + 18, rows * 25 + 83);
-   Game->show();
+
+   if (message != "Error") {
+      this->hide();
+      GameWindow *Game;
+      Game = new GameWindow(this, rows, cols, mines, message);
+      Game->ui->groupBoxGameField->setMinimumSize(cols * 25, rows * 25);
+      Game->setMinimumSize(cols * 25 + 18, rows * 25 + 83);
+      Game->show();
+   }
+   ui->btn_start->setEnabled(true);
 }
 void WelcomeWindow::showWidget(int index)
 {
    if (ui->stackedWidget->currentIndex() == index && !ui->stackedWidget->isHidden()) {
-      if (ui->stackedWidget->currentIndex() == 2) {
-      } else if (ui->comboBox->currentIndex() == 6) {
-         ui->stackedWidget->setCurrentIndex(2);
+      if (ui->stackedWidget->currentIndex() == 2) { //Если открыто Custom_game
+      } else if (ui->comboBox->currentText() == "Своя") {
+         ui->stackedWidget->setCurrentIndex(2); //Если открыто Custom_game
       } else {
          ui->stackedWidget->hide();
       }

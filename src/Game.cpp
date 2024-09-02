@@ -16,6 +16,7 @@
 #include <QTransform>
 #include <cstdlib> // Для srand и rand
 #include <ctime>
+#include <queue>
 
 GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QString message)
     : parent(parent)
@@ -35,7 +36,6 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
 
    connect(timerSec, &QTimer::timeout, this, &GameWindow::secTimer);
    timerSec->start(1000);
-   connect(minetimer, &QTimer::timeout, this, &GameWindow::updateMineTimer);
 }
 void GameWindow::leftClick(int x, int y)
 {
@@ -44,8 +44,8 @@ void GameWindow::leftClick(int x, int y)
    QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    if (currentPixmap.toImage() == flag.toImage()) return;
 
-   if (once) {
-      once = false;
+   if (onceField) {
+      onceField = false;
       int startx = x;
       int starty = y;
       short int counter = 0;
@@ -172,6 +172,8 @@ void GameWindow::leftClick(int x, int y)
                         }
                      } else {
                         buttons[nx][ny]->setIcon(QIcon(":/images/button_armedbomb.png"));
+                        deadCellx = x;
+                        deadCelly = y;
                         endGame(false);
                      }
                   }
@@ -201,13 +203,14 @@ void GameWindow::leftClick(int x, int y)
          }
       } else {
          buttons[x][y]->setIcon(armedbomb);
+         deadCellx = x;
+         deadCelly = y;
          endGame(false);
       }
    }
    //проверка на победу
    if (rows * cols - mines == openFieldCounter) {
       endGame(true);
-      return;
    }
 }
 void GameWindow::rightClick(int x, int y)
@@ -311,6 +314,21 @@ void GameWindow::endGame(bool win)
    int h = time / 3600;
    int m = (time % 3600) / 60;
    int s = time % 60;
+
+   //Обновление статистики
+   for (int x = 0; x < rows; x++)
+      for (int y = 0; y < cols; y++) {
+         QPixmap currentPixmap = buttons[x][y]->icon().pixmap(QSize(25, 25));
+         if (currentPixmap.toImage() == flag.toImage() && Field[x][y] == 9) {
+            buttons[x][y]->setIcon(defusedbomb);
+            parent->defusedCounter++;
+            parent->ui->labelDefusedCouner->setText(QString::number(parent->defusedCounter));
+         } else if (currentPixmap.toImage() == flag.toImage()) {
+            buttons[x][y]->setEnabled(false);
+            parent->uncorrectFlags++;
+            parent->ui->labelUncorrectFlagsCounter->setText(QString::number(parent->uncorrectFlags));
+         }
+      }
    if (win) {
       if (ui->labelDifficult->text() == "Easy") {
          if (lastseconds > time) {
@@ -333,25 +351,10 @@ void GameWindow::endGame(bool win)
             parent->ui->labelInsaneRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       }
-   }
+      parent->endGame(win);
 
-   for (int x = 0; x < rows; x++)
-      for (int y = 0; y < cols; y++) {
-         QPixmap currentPixmap = buttons[x][y]->icon().pixmap(QSize(25, 25));
-         if (Field[x][y] == 9 && currentPixmap.toImage() != flag.toImage()) {
-            arrsize++;
-            arr.push_back(buttons[x][y]);
-         } else if (currentPixmap.toImage() == flag.toImage() && Field[x][y] == 9) {
-            buttons[x][y]->setIcon(defusedbomb);
-            parent->defusedCounter++;
-            parent->ui->labelDefusedCouner->setText(QString::number(parent->defusedCounter));
-         } else if (currentPixmap.toImage() == flag.toImage()) {
-            buttons[x][y]->setEnabled(false);
-            parent->uncorrectFlags++;
-            parent->ui->labelUncorrectFlagsCounter->setText(QString::number(parent->uncorrectFlags));
-         }
-      }
-   if (win) {
+      //Обновление интерфейса
+      ui->btn_exit->setText("Закрыть");
       ui->btn_exit->setStyleSheet(R"(QPushButton {
          background-color: #4CAF50;
          border-radius:4px;
@@ -374,45 +377,69 @@ void GameWindow::endGame(bool win)
          }
       }
    } else {
-      minetimer->start(interval);
+      minesExplosion();
    }
-   ui->btn_exit->setText("Закрыть");
-   parent->endGame(win);
 }
-void GameWindow::updateMineTimer()
+void GameWindow::minesExplosion()
 {
-   if (arrsize <= 0) {
-      if (parent->ui->checkBoxWatchAllField->isChecked()) {
-         for (int x = 0; x < rows; x++)
-            for (int y = 0; y < cols; y++) {
-               if (Field[x][y] >= 0 && Field[x][y] <= 8) buttons[x][y]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[x][y])));
+   log("Explosion started");
+
+   // Устанавливаем интервал и запускаем таймер
+   explosionTimer->setInterval(interval);
+   explosionTimer->start();
+
+   // Начинаем с начальной точки
+   queue.push(QPoint(deadCellx, deadCelly));
+   visited.push_back(QPoint(deadCellx, deadCelly));
+
+   connect(explosionTimer, &QTimer::timeout, this, [this]() {
+      // Открываем клетки в круговом радиусе
+      int cellsOpened = 0; // Счётчик открытых клеток
+
+      for (int dx = -currentRadius; dx <= currentRadius; dx++) {
+         for (int dy = -currentRadius; dy <= currentRadius; dy++) {
+            // Проверяем, находится ли точка в круге
+            if (dx * dx + dy * dy <= currentRadius * currentRadius) {
+               int newX = deadCellx + dx; // Используем начальную точку
+               int newY = deadCelly + dy;
+
+               // Проверяем границы
+               if (newX >= 0 && newX < rows && newY >= 0 && newY < cols) {
+                  QPoint neighbor(newX, newY);
+                  // Проверяем, была ли клетка уже открыта
+                  if (std::find(visited.begin(), visited.end(), neighbor) == visited.end()) {
+                     visited.push_back(neighbor); // Добавляем в посещенные
+                     queue.push(neighbor);        // Добавляем в очередь
+
+                     // Открываем клетку
+                     if (Field[newX][newY] != 9) {
+                        if (parent->ui->checkBoxWatchAllField->isChecked()) {
+                           buttons[newX][newY]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[newX][newY])));
+                        }
+                     } else {
+                        buttons[newX][newY]->setIcon(armedbomb);
+                        minesOpened++;
+                     }
+                     cellsOpened++;
+                  }
+               }
             }
+         }
       }
-      minetimer->stop();
-      return;
-   }
-   int u = rand() % arrsize;
 
-   //bombsound->stop();
-   //bombsound->play();
+      // Увеличиваем радиус только если были открыты клетки
+      if (cellsOpened > 0) {
+         currentRadius++;
+      }
 
-   arr[u]->setIcon(armedbomb);
-
-   if (u >= 0 && u < arr.size()) {
-      arr.erase(arr.begin() + u);
-   }
-   arrsize--;
-   int decrement;
-   if (arrsize > 0) {
-      int decreaseFactor = 10; // Можете настроить этот коэффициент
-      int newInterval = interval - (decreaseFactor * (1000 - arrsize) / 100);
-      if (intervalCounter == 40) minInterval = 10;
-      interval = qMax(minInterval, newInterval);
-      minetimer->setInterval(interval);
-      if (interval == minInterval && intervalCounter < 50) intervalCounter++;
-      // Логирование нового интервала
-      log(QString("newInterval = %1").arg(interval));
-   }
+      // Проверяем, достигли ли мы максимального количества открытых мин
+      if (minesOpened >= mines) {
+         log("Bombs out. Stop exploding");
+         // Останавливаем таймер
+         explosionTimer->stop();
+         explosionTimer->deleteLater();
+      }
+   });
 }
 void GameWindow::secTimer()
 {
@@ -445,9 +472,10 @@ void GameWindow::resizeEvent(QResizeEvent *event)
 void GameWindow::closeEvent(QCloseEvent *event)
 {
    timerSec->stop();
-   minetimer->stop();
+   explosionTimer->stop();
    log("Game closing...");
    parent->saveData();
+   parent->show();
    event->accept();
 }
 bool GameWindow::createButtonField()

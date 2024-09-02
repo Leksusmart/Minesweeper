@@ -9,10 +9,12 @@
 #include <QMainWindow>
 #include <QMouseEvent>
 #include <QPixmap>
+#include <QPoint>
 #include <QPushButton>
 #include <QTimer>
 #include <QVector>
 #include <QWidget>
+#include <queue>
 namespace Ui {
 class GameWindow;
 }
@@ -47,20 +49,21 @@ private:
    QPixmap defusedbomb = QIcon(":/images/button_defusedbomb.png").pixmap(QSize(25, 25));
    QPixmap flag = QIcon(":/images/button_flag.png").pixmap(QSize(25, 25));
    QPixmap question = QIcon(":/images/button_question.png").pixmap(QSize(25, 25));
-   bool once = true;
+   bool onceField = true;
    bool onceResize = true;
    QString message = "Error";
    QTimer *timerSec = new QTimer;
    qint64 time = 0;
-   QTimer *minetimer = new QTimer;
-   QVector<QToolButton *> arr;
-   short int arrsize = 0;
-   short int interval = 800;
+   short int interval = 100;
    bool GameEnd = false;
-   short int minInterval = 50;
+   short int deadCellx = NULL;
+   short int deadCelly = NULL;
+   QTimer *explosionTimer = new QTimer;
    short int openFieldCounter = 0;
-   short int intervalCounter = 0;
-
+   std::queue<QPoint> queue;    // Используем очередь для обработки клеток
+   std::vector<QPoint> visited; // Для отслеживания уже открытых клеток
+   int currentRadius = 1;       // Переменная для отслеживания радиуса
+   int minesOpened = 1;         // Счётчик открытых мин
 public slots:
    void log(const QString &message)
    {
@@ -74,7 +77,7 @@ private slots:
    void leftClick(int x, int y);
    void rightClick(int x, int y);
    void endGame(bool win);
-   void updateMineTimer();
+   void minesExplosion();
 };
 
 #endif // GAMEWINDOW_H
