@@ -20,5 +20,56 @@
         <file>button_armedbomb.png</file>
         <file>tutorial_arrow.png</file>
     </qresource>
-    <qresource prefix="/sounds"/>
+    <qresource prefix="/sound">
+        <file>background/2_Young_4_Love_INSTRUMENTAL.mp3</file>
+        <file>background/All_I_Wanna_Do_INSTRUMENTAL.mp3</file>
+        <file>background/All_Mine_INSTRUMENTAL.mp3</file>
+        <file>background/Another_Galaxy_INSTRUMENTAL.mp3</file>
+        <file>background/Bad_Girl_INSTRUMENTAL.mp3</file>
+        <file>background/Brand_New_Love_INSTRUMENTAL.mp3</file>
+        <file>background/Dancefloor_Lover_INSTRUMENTAL.mp3</file>
+        <file>background/Devotion_INSTRUMENTAL.mp3</file>
+        <file>background/Don't_Rock_The_Boat_INSTRUMENTAL.mp3</file>
+        <file>background/Dreaming_of_You_INSTRUMENTAL.mp3</file>
+        <file>background/Faith_INSTRUMENTAL.mp3</file>
+        <file>background/Fascination_INSTRUMENTAL.mp3</file>
+        <file>background/Figured_Out_INSTRUMENTAL.mp3</file>
+        <file>background/Fly_INSTRUMENTAL.mp3</file>
+        <file>background/Foolin_INSTRUMENTAL.mp3</file>
+        <file>background/Forever_INSTRUMENTAL.mp3</file>
+        <file>background/Freedom_INSTRUMENTAL.mp3</file>
+        <file>background/Frequency_INSTRUMENTAL.mp3</file>
+        <file>background/Friend_INSTRUMENTAL.mp3</file>
+        <file>background/Get_Away_INSTRUMENTAL.mp3</file>
+        <file>background/Go_All_Nite_INSTRUMENTAL.mp3</file>
+        <file>background/Hard_2_Find_INSTRUMENTAL.mp3</file>
+        <file>background/Heat_of_the_Moment_INSTRUMENTAL.mp3</file>
+        <file>background/I_Need_That_Feeling_INSTRUMENTAL.mp3</file>
+        <file>background/I_Want_You_INSTRUMENTAL.mp3</file>
+        <file>background/Just_Right_INSTRUMENTAL.mp3</file>
+        <file>background/Last_2_Know_INSTRUMENTAL.mp3</file>
+        <file>background/Love_2nite_INSTRUMENTAL.mp3</file>
+        <file>background/Love_in_Motion_INSTRUMENTAL.mp3</file>
+        <file>background/Midnight_INSTRUMENTAL.mp3</file>
+        <file>background/Moments_INSTRUMENTAL.mp3</file>
+        <file>background/Motion_INSTRUMENTAL.mp3</file>
+        <file>background/Neon_Heart_INSTRUMENTAL.mp3</file>
+        <file>background/Nightmare_INSTRUMENTAL.mp3</file>
+        <file>background/Party_Princess_INSTRUMENTAL.mp3</file>
+        <file>background/Physical_INSTRUMENTAL.mp3</file>
+        <file>background/Play_It_Cool_INSTRUMENTAL.mp3</file>
+        <file>background/Shadow_INSTRUMENTAL.mp3</file>
+        <file>background/Something_Good_Tonight_INSTRUMENTAL.mp3</file>
+        <file>background/Summer84_INSTRUMENTAL.mp3</file>
+        <file>background/Take_U_On_A_Ride_INSTRUMENTAL.mp3</file>
+        <file>background/Take_Ur_Hand_INSTRUMENTAL.mp3</file>
+        <file>background/The_Dream_Machine_INSTRUMENTAL.mp3</file>
+        <file>background/Touch_INSTRUMENTAL.mp3</file>
+        <file>background/U_Can_Have_It_All_INSTRUMENTAL.mp3</file>
+        <file>background/U_Keep_Me_Up_All_Nite_INSTRUMENTAL.mp3</file>
+        <file>background/UFO_INSTRUMENTAL.mp3</file>
+        <file>background/Undercover_INSTRUMENTAL.mp3</file>
+        <file>background/Unforgettable_INSTRUMENTAL.mp3</file>
+        <file>background/We_Got_Somethin'_INSTRUMENTAL.mp3</file>
+    </qresource>
 </RCC>

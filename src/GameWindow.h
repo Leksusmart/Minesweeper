@@ -12,6 +12,7 @@
 #include <QPoint>
 #include <QPushButton>
 #include <QTimer>
+#include <QUrl>
 #include <QVector>
 #include <QWidget>
 #include <queue>
@@ -63,7 +64,7 @@ private:
    std::queue<QPoint> queue;    // Используем очередь для обработки клеток
    std::vector<QPoint> visited; // Для отслеживания уже открытых клеток
    int currentRadius = 1;       // Переменная для отслеживания радиуса
-   int minesOpened = 1;         // Счётчик открытых мин
+   int cellsOpenedGlobal = 1;
 public slots:
    void log(const QString &message)
    {

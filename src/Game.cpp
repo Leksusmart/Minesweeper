@@ -14,7 +14,8 @@
 #include <QTimer>
 #include <QToolButton>
 #include <QTransform>
-#include <cstdlib> // Для srand и rand
+#include <QUrl>
+#include <cstdlib>
 #include <ctime>
 #include <queue>
 
@@ -138,7 +139,8 @@ void GameWindow::leftClick(int x, int y)
             int nx = x + dx;
             int ny = y + dy;
             if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-               if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()) {
+               if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
+                   || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                   unpressedCounter++;
                } else if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == flag.toImage()) {
                   flagCounter++;
@@ -155,7 +157,8 @@ void GameWindow::leftClick(int x, int y)
                int nx = x + dx;
                int ny = y + dy;
                if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-                  if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()) {
+                  if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
+                      || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                      if (Field[nx][ny] != 9) {
                         buttons[nx][ny]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[nx][ny])));
                         openFieldCounter++;
@@ -236,7 +239,8 @@ void GameWindow::rightClick(int x, int y)
             int nx = x + dx;
             int ny = y + dy;
             if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-               if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()) {
+               if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
+                   || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                   unpressedCounter++;
                } else if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == flag.toImage()) {
                   flagCounter++;
@@ -261,7 +265,8 @@ void GameWindow::rightClick(int x, int y)
                int nx = x + dx;
                int ny = y + dy;
                if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-                  if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()) {
+                  if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
+                      || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                      ui->lcdNumberMarked->display(ui->lcdNumberMarked->value() + 1);
                      buttons[nx][ny]->setIcon(flag);
                   }
@@ -316,6 +321,7 @@ void GameWindow::endGame(bool win)
    int s = time % 60;
 
    //Обновление статистики
+   parent->endGame(win);
    for (int x = 0; x < rows; x++)
       for (int y = 0; y < cols; y++) {
          QPixmap currentPixmap = buttons[x][y]->icon().pixmap(QSize(25, 25));
@@ -351,7 +357,6 @@ void GameWindow::endGame(bool win)
             parent->ui->labelInsaneRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       }
-      parent->endGame(win);
 
       //Обновление интерфейса
       ui->btn_exit->setText("Закрыть");
@@ -394,7 +399,7 @@ void GameWindow::minesExplosion()
 
    connect(explosionTimer, &QTimer::timeout, this, [this]() {
       // Открываем клетки в круговом радиусе
-      int cellsOpened = 0; // Счётчик открытых клеток
+      int cellsOpenedLocal = 0; // Счётчик открытых клеток
 
       for (int dx = -currentRadius; dx <= currentRadius; dx++) {
          for (int dy = -currentRadius; dy <= currentRadius; dy++) {
@@ -414,13 +419,15 @@ void GameWindow::minesExplosion()
                      // Открываем клетку
                      if (Field[newX][newY] != 9) {
                         if (parent->ui->checkBoxWatchAllField->isChecked()) {
-                           buttons[newX][newY]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[newX][newY])));
+                           if (buttons[newX][newY]->isEnabled())
+                              buttons[newX][newY]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[newX][newY])));
                         }
                      } else {
-                        buttons[newX][newY]->setIcon(armedbomb);
-                        minesOpened++;
+                        if (buttons[newX][newY]->icon().pixmap(buttons[newX][newY]->iconSize()).toImage() != defusedbomb.toImage())
+                           buttons[newX][newY]->setIcon(armedbomb);
                      }
-                     cellsOpened++;
+                     cellsOpenedLocal++;
+                     cellsOpenedGlobal++;
                   }
                }
             }
@@ -428,13 +435,12 @@ void GameWindow::minesExplosion()
       }
 
       // Увеличиваем радиус только если были открыты клетки
-      if (cellsOpened > 0) {
+      if (cellsOpenedLocal > 0) {
          currentRadius++;
       }
 
-      // Проверяем, достигли ли мы максимального количества открытых мин
-      if (minesOpened >= mines) {
-         log("Bombs out. Stop exploding");
+      if (cellsOpenedGlobal == cols * rows) {
+         log("Cells out. Stop exploding");
          // Останавливаем таймер
          explosionTimer->stop();
          explosionTimer->deleteLater();
@@ -475,8 +481,11 @@ void GameWindow::closeEvent(QCloseEvent *event)
    explosionTimer->stop();
    log("Game closing...");
    parent->saveData();
-   parent->show();
-   event->accept();
+
+   this->hide();   // Скрываем текущее окно
+   parent->show(); // Показываем родительское окно
+
+   event->accept(); // Позволяет окну закрыться
 }
 bool GameWindow::createButtonField()
 {

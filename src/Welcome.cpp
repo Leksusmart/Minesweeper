@@ -21,6 +21,7 @@
 #include "GameWindow.h"
 #include "WelcomeWindow.h"
 #include "ui_Game.h"
+
 WelcomeWindow::WelcomeWindow(QMainWindow *parent)
     : ui(new Ui::WelcomeWindow)
 {
@@ -28,6 +29,8 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->setupUi(this);
    //Убираем обучение
    ui->comboBox->removeItem(0);
+
+   //Звук
 
    //Убираем отправление ошибки
    ui->labelStaticSettingsSendError->hide();
@@ -40,7 +43,9 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->btn_records->setFixedSize(QSize(25, 25));
    ui->btn_settings->setFixedSize(QSize(25, 25));
    ui->stackedWidget->hide();
+
    loadData();
+
    ui->gridLayoutCustom->addWidget(ui->frame, 1, 2, Qt::AlignTop | Qt::AlignLeft);
    int width = ui->progressBarX->width() * ui->progressBarX->value() / ui->progressBarX->maximum();
    int height = ui->progressBarY->height() * ui->progressBarY->value() / ui->progressBarY->maximum();
@@ -120,49 +125,6 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
          minutes = 0;
       }
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
-   });
-   connect(ui->btn_sendError, &QPushButton::clicked, this, &WelcomeWindow::sendError);
-}
-void WelcomeWindow::sendError()
-{
-   log("Попытка отправки Ошибки");
-   QString errorMessage = ui->textFieldSendError->toPlainText();
-   QString filePath = QDir(QCoreApplication::applicationDirPath()).filePath("session.log");
-
-   // Читаем файл
-   QFile file(filePath);
-   if (!file.open(QIODevice::ReadOnly)) {
-      log(QString("Ошибка открытия файла: %1").arg(file.errorString()));
-      QMessageBox::warning(this, "Ошибка", "Увы, но ваши данные не попали к разработчику. Ошибка при чтении файла session.log");
-      return;
-   }
-
-   // Создаем данные для отправки
-   QString logContent = file.readAll();
-   file.close();
-   logContent = "Описание ошибки: " + errorMessage + "\n" + logContent;
-   QByteArray postData;
-   postData.append("log_content=").append(QUrl::toPercentEncoding(logContent)); // Кодируем содержимое
-   QNetworkAccessManager *manager = new QNetworkAccessManager();
-
-   QUrl url1("http://192.168.1.220:5000/logs"); //Основной адрес
-
-   QNetworkRequest request(url1);
-
-   // Отправляем запрос
-   QNetworkReply *reply = manager->post(request, postData);
-
-   QObject::connect(reply, &QNetworkReply::finished, this, [reply, this]() {
-      if (reply->error() == QNetworkReply::NoError) {
-         QMessageBox::information(this,
-                                  "Успех",
-                                  "Ответ от сервера получен. Данные об ошибке отправлены разработчику. Спасибо за предоставленную информацию!");
-         ui->textFieldSendError->clear();
-      } else {
-         QMessageBox::warning(this, "Ошибка", "Данные об ошибке не были отправлены разработчику. Проверьте подключение к интернету.");
-         QObject::disconnect(reply, &QNetworkReply::finished, this, nullptr);
-      }
-      reply->deleteLater();
    });
 }
 void WelcomeWindow::startGame()

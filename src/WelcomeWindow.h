@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QTimer>
+#include <QUrl>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class WelcomeWindow;
@@ -39,6 +40,7 @@ private:
    QTimer *timerSec = new QTimer(this);
    double MusicVolume = 0.25;
    double UiVolume = 0.25;
+   QUrl source1 = QUrl("qrc:/sound/background/Dancefloor_Lover_INSTRUMENTAL.mp3");
 public slots:
    void log(const QString &message);
    void saveData();
@@ -51,6 +53,5 @@ private slots:
    void showWidget(int index);
    void closeEvent(QCloseEvent *event) override;
    void startGame();
-   void sendError();
 };
 #endif // WELCOMEWINDOW_H
