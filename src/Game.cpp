@@ -469,7 +469,6 @@ void GameWindow::minesExplosion()
          log("Cells out. Stop exploding");
          // Останавливаем таймер
          explosionTimer->stop();
-         explosionTimer->deleteLater();
       }
    });
 }
@@ -556,6 +555,8 @@ GameWindow::~GameWindow()
       }
       delete[] Field[i];
    }
+   delete explosionTimer;
+   delete timerSec;
    delete[] Field;
    delete ui;
 }
