@@ -19,6 +19,7 @@
         <file>button_unpresseed.png</file>
         <file>button_armedbomb.png</file>
         <file>tutorial_arrow.png</file>
+        <file>GameName.png</file>
     </qresource>
     <qresource prefix="/sound">
         <file>background/2_Young_4_Love_INSTRUMENTAL.mp3</file>

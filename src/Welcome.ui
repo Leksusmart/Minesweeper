@@ -600,7 +600,7 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-89</y>
+         <y>0</y>
          <width>316</width>
          <height>408</height>
         </rect>
@@ -1764,11 +1764,11 @@ QToolButton:hover {
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="labelGameNameShadow">
+   <widget class="QLabel" name="labelGameName">
     <property name="geometry">
      <rect>
-      <x>13</x>
-      <y>13</y>
+      <x>15</x>
+      <y>20</y>
       <width>331</width>
       <height>81</height>
      </rect>
@@ -1782,34 +1782,12 @@ QToolButton:hover {
     </property>
     <property name="styleSheet">
      <string notr="true">QLabel {
-	color: rgb(0, 0, 0);
+	
+	image: url(:/images/GameName.png);
 }</string>
     </property>
     <property name="text">
-     <string>Minesweeper</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignmentFlag::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelGameName">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>331</width>
-      <height>81</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Viner Hand ITC</family>
-      <pointsize>42</pointsize>
-      <italic>false</italic>
-     </font>
-    </property>
-    <property name="text">
-     <string>Minesweeper</string>
+     <string> </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignCenter</set>
