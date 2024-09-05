@@ -269,6 +269,16 @@ void GameWindow::rightClick(int x, int y)
                       || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                      ui->lcdNumberMarked->display(ui->lcdNumberMarked->value() + 1);
                      buttons[nx][ny]->setIcon(flag);
+                     buttons[nx][ny]->setStyleSheet(R"(
+                        QToolButton {
+                           background-color: #808080;
+                           border: none;
+                        }
+                        QToolButton:pressed {
+                           padding: 0px;
+                           margin: 0px;
+                        }
+                     )");
                   }
                }
             }
