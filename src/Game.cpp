@@ -98,17 +98,6 @@ void GameWindow::leftClick(int x, int y)
                      bombCounter++;
                   }
                }
-               if (bombCounter == 0)
-                  buttons[i][j]->setStyleSheet(R"(
-                  QToolButton {
-                     background-color: #808080;
-                     border: none;
-                  }
-                  QToolButton:pressed {
-                     padding: 0px;
-                     margin: 0px;
-                  }
-                  )");
                Field[i][j] = bombCounter; // Устанавливаем количество бомб вокруг
                row += QString("[%1]").arg(Field[i][j]);
             } else {
@@ -163,6 +152,17 @@ void GameWindow::leftClick(int x, int y)
                         buttons[nx][ny]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[nx][ny])));
                         openFieldCounter++;
                         if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == button_0.toImage()) {
+                           //Отключение видимости нажатия на кнопку
+                           buttons[nx][ny]->setStyleSheet(R"(
+                              QToolButton {
+                                 background-color: #808080;
+                                 border: none;
+                              }
+                              QToolButton:pressed {
+                                 padding: 0px;
+                                 margin: 0px;
+                              }
+                           )");
                            for (int d2x = -1; d2x <= 1; d2x++) {
                               for (int d2y = -1; d2y <= 1; d2y++) {
                                  int n2x = nx + d2x;
@@ -319,6 +319,22 @@ void GameWindow::endGame(bool win)
    int h = time / 3600;
    int m = (time % 3600) / 60;
    int s = time % 60;
+
+   //Отключение видимости нажатия на кнопку
+   for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < cols; j++) {
+         buttons[i][j]->setStyleSheet(R"(
+            QToolButton {
+               background-color: #808080;
+               border: none;
+            }
+            QToolButton:pressed {
+               padding: 0px;
+               margin: 0px;
+            }
+         )");
+      }
+   }
 
    //Обновление статистики
    parent->endGame(win);
