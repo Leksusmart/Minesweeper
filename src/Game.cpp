@@ -325,7 +325,6 @@ void GameWindow::endGame(bool win)
    GameEnd = true;
    timerSec->stop(); // Останавливаем таймер
    ui->labelStaticTime->setText("Итого:");
-   qint64 lastseconds = ((parent->hours * 60) + parent->minutes) * 60 + parent->seconds;
    int h = time / 3600;
    int m = (time % 3600) / 60;
    int s = time % 60;
@@ -345,7 +344,6 @@ void GameWindow::endGame(bool win)
          )");
       }
    }
-
    //Обновление статистики
    parent->endGame(win);
    for (int x = 0; x < rows; x++)
@@ -363,23 +361,23 @@ void GameWindow::endGame(bool win)
       }
    if (win) {
       if (ui->labelDifficult->text() == "Easy") {
-         if (lastseconds > time) {
+         if (parent->decryptTime(parent->ui->labelEasyRecord->text()) > time) {
             parent->ui->labelEasyRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       } else if (ui->labelDifficult->text() == "Medium") {
-         if (lastseconds > time) {
+         if (parent->decryptTime(parent->ui->labelMediumRecord->text()) > time) {
             parent->ui->labelMediumRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       } else if (ui->labelDifficult->text() == "Hard") {
-         if (lastseconds > time) {
+         if (parent->decryptTime(parent->ui->labelHardRecord->text()) > time) {
             parent->ui->labelHardRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       } else if (ui->labelDifficult->text() == "Extreme") {
-         if (lastseconds > time) {
+         if (parent->decryptTime(parent->ui->labelExtremeRecord->text()) > time) {
             parent->ui->labelExtremeRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       } else if (ui->labelDifficult->text() == "Insane") {
-         if (lastseconds > time) {
+         if (parent->decryptTime(parent->ui->labelInsaneRecord->text()) > time) {
             parent->ui->labelInsaneRecord->setText(QString("лучшее время: " + parent->setTime(h, m, s)));
          }
       }

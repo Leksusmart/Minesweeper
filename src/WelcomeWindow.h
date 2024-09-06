@@ -47,6 +47,7 @@ public slots:
    void loadData();
    void endGame(bool win);
    QString setTime(int h, int m, int s);
+   qint64 decryptTime(QString sTime);
 private slots:
    void updateMarkerXPosition(int value);
    void updateMarkerYPosition(int value);

@@ -18,6 +18,7 @@
 #include "GameWindow.h"
 #include "WelcomeWindow.h"
 #include "ui_Game.h"
+#include <sstream>
 
 WelcomeWindow::WelcomeWindow(QMainWindow *parent)
     : ui(new Ui::WelcomeWindow)
@@ -357,6 +358,34 @@ QString WelcomeWindow::setTime(int h, int m, int s)
    }
 
    ui->labelPlayedTime->setText(time);
+   return time;
+}
+qint64 WelcomeWindow::decryptTime(QString sTime)
+{
+   sTime.remove("лучшее время: ");
+   if (sTime == "?" || sTime == "") return 9223372036854775807; //max of qint64
+   int time = 0;
+   std::istringstream iss(sTime.toStdString()); // Преобразуем QString в std::string
+   QStringList words = sTime.split(' ');        // Разделение строки на слова
+   int h = 0, m = 0, s = 0;
+
+   bool o1 = true;
+   bool o2 = true;
+   // Выводим результат
+   for (int i = words.size() - 1; i >= 0; i--) {
+      if (i % 2 == 0) {
+         if (o1) {
+            o1 = false;
+            s = words[i].toInt();
+         } else if (o2) {
+            o2 = false;
+            m = words[i].toInt();
+         } else {
+            h = words[i].toInt();
+         }
+      }
+   }
+   time = h * 3600 + m * 60 + s;
    return time;
 }
 void WelcomeWindow::log(const QString &message)
