@@ -97,6 +97,8 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
          posY = (ui->progressBarY->height() * 4 / ui->progressBarY->maximum()) + ui->progressBarY->y();
          posX = ui->progressBarY->x();
          markerY->move(posX, posY - markerY->height() / 2);
+      } else if (ui->comboBox->currentText() != "Своя" && ui->stackedWidget->currentIndex() == 2) {
+         ui->stackedWidget->hide();
       }
    });
    connect(ui->SliderX, &QSlider::valueChanged, this, [=](int value) {
@@ -432,6 +434,7 @@ void WelcomeWindow::endGame(bool win)
    double w = Wins;
    if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
 }
+
 WelcomeWindow::~WelcomeWindow()
 {
    timerSec->stop();
