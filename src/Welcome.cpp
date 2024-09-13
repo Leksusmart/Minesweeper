@@ -28,8 +28,6 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    //Убираем обучение
    ui->comboBox->removeItem(0);
 
-   //Звук
-
    //Убираем отправление ошибки
    ui->labelStaticSettingsSendError->hide();
    ui->groupBoxSendError->hide();
@@ -112,7 +110,10 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       updateMarkerYPosition(value);
    });
    connect(ui->btn_start, &QPushButton::clicked, this, &WelcomeWindow::startGame);
-   connect(ui->SliderMusicVolume, &QSlider::valueChanged, this, [=] { MusicVolume = ui->SliderMusicVolume->value() / 100.0; });
+   connect(ui->SliderMusicVolume, &QSlider::valueChanged, this, [=] {
+      MusicVolume = ui->SliderMusicVolume->value() / 100.0;
+      audioOutput->setVolume(MusicVolume);
+   });
    connect(ui->SliderUiVolume, &QSlider::valueChanged, this, [=] { UiVolume = ui->SliderUiVolume->value() / 100.0; });
    connect(timerSec, &QTimer::timeout, this, [=] {
       seconds++;
@@ -126,6 +127,28 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       }
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
    });
+
+   //Звук
+   background->setAudioOutput(audioOutput);
+   audioOutput->setVolume(MusicVolume);
+   QUrl source;
+   srand(time(NULL));
+   if (rand() % 2 == 0)
+      source = source1;
+   else
+      source = source2;
+   background->setSource(source);
+   connect(background, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+      if (status == QMediaPlayer::EndOfMedia) {
+         if (background->source() == source1) {
+            background->setSource(source2);
+         } else {
+            background->setSource(source1);
+         }
+         volumeUp();
+      }
+   });
+   volumeUp();
 }
 void WelcomeWindow::startGame()
 {
@@ -410,10 +433,50 @@ void WelcomeWindow::log(const QString &message)
 }
 void WelcomeWindow::closeEvent(QCloseEvent *event)
 {
+   background->stop();
    saveData();
    log("Application closing...");
    timerSec->stop();
    event->accept();
+}
+void WelcomeWindow::volumeUp(double volume)
+{
+   volume += 0.01;
+   if (volume >= MusicVolume) {
+      audioOutput->setVolume(MusicVolume);
+      return;
+   }
+   log(QString("Volume: %1").arg(volume));
+   QTimer::singleShot(50, [=]() {
+      audioOutput->setVolume(volume);
+      volumeUp(volume);
+   });
+}
+void WelcomeWindow::volumeUp()
+{
+   background->play();
+   volumeUp(0.0);
+}
+void WelcomeWindow::volumeDown(double volume)
+{
+   volume -= 0.05;
+   if (volume < 0 || volume > MusicVolume) {
+      audioOutput->setVolume(0.0);
+      background->pause();
+      QTimer::singleShot(50, [=]() {
+         if (audioOutput->volume() != 0.0) volumeDown();
+      });
+      return;
+   }
+   log(QString("Volume: %1").arg(volume));
+   QTimer::singleShot(50, [=]() {
+      audioOutput->setVolume(volume);
+      volumeDown(volume);
+   });
+}
+void WelcomeWindow::volumeDown()
+{
+   volumeDown(MusicVolume);
 }
 void WelcomeWindow::endGame(bool win)
 {

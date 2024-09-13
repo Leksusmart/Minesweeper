@@ -27,6 +27,7 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
     , mines(mines)
     , message(message)
 {
+   parent->volumeDown();
    ui->setupUi(this);
    srand(std::time(NULL));
 
@@ -37,6 +38,33 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
 
    connect(timerSec, &QTimer::timeout, this, &GameWindow::secTimer);
    timerSec->start(1000);
+   //Звук
+   audioOutput->setVolume(parent->MusicVolume);
+   background->setAudioOutput(audioOutput);
+   int i = rand() % 48;
+   background->setSource(sources[i]);
+   connect(background, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+      if (status == QMediaPlayer::EndOfMedia) {
+         // Получаем текущий источник
+         QUrl currentSource = background->source();
+
+         // Находим индекс текущего источника
+         auto it = std::find(sources.begin(), sources.end(), currentSource);
+
+         // Если текущий источник найден и не последний в списке
+         if (it != sources.end() && (it + 1) != sources.end()) {
+            background->setSource(*(it + 1)); // Устанавливаем следующий источник
+         } else {
+            background->setSource(sources[0]); // Переключаем на первый источник, если достигнут конец
+         }
+         log(QString("Music auto-changed from %1 to %2")
+                .arg(currentSource.toString())          // Преобразуем QUrl в QString
+                .arg(background->source().toString())); // Преобразуем QUrl в QString
+
+         background->play(); // Запускаем воспроизведение
+      }
+   });
+   background->play(); // Запускаем воспроизведение
 }
 void GameWindow::leftClick(int x, int y)
 {
@@ -500,6 +528,7 @@ void GameWindow::resizeEvent(QResizeEvent *event)
 }
 void GameWindow::closeEvent(QCloseEvent *event)
 {
+   background->stop();
    timerSec->stop();
    explosionTimer->stop();
    log("Game closing...");
@@ -507,7 +536,7 @@ void GameWindow::closeEvent(QCloseEvent *event)
 
    this->hide();   // Скрываем текущее окно
    parent->show(); // Показываем родительское окно
-
+   parent->volumeUp();
    event->accept(); // Позволяет окну закрыться
 }
 bool GameWindow::createButtonField()
