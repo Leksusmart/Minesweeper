@@ -46,9 +46,13 @@ private:
    QLabel *markerY;
    QTimer *timerSec = new QTimer(this);
 
-   QUrl source1 = QUrl("qrc:/sound/background/Dancefloor_Lover_INSTRUMENTAL.mp3");
-   QUrl source2 = QUrl("qrc:/sound/background/Hard_2_Find_INSTRUMENTAL.mp3");
+   QUrl source1 = QUrl("qrc:/sound/sound/background/Dancefloor_Lover_INSTRUMENTAL.mp3");
+   QUrl source2 = QUrl("qrc:/sound/sound/background/Hard_2_Find_INSTRUMENTAL.mp3");
    QAudioOutput *audioOutput = new QAudioOutput(this);
+   QAudioOutput *audioOutputUi = new QAudioOutput(this);
+   QMediaPlayer *soundUi = new QMediaPlayer(this);
+   QUrl soundClicked = QUrl("qrc:/sound/sound/Button.mp3");
+   QUrl soundCheckBox = QUrl("qrc:/sound/sound/CheckBox.mp3");
 public slots:
    void log(const QString &message);
    void saveData();

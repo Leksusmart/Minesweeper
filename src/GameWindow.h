@@ -41,20 +41,20 @@ private:
    WelcomeWindow *parent;
    friend WelcomeWindow;
    QVector<QVector<QToolButton *>> buttons;
-   QPixmap unpressed = QIcon(":/images/button_unpresseed.png").pixmap(QSize(25, 25));
-   QPixmap button_0 = QIcon(":/images/button_0.png").pixmap(QSize(25, 25));
-   QPixmap button_1 = QIcon(":/images/button_1.png").pixmap(QSize(25, 25));
-   QPixmap button_2 = QIcon(":/images/button_2.png").pixmap(QSize(25, 25));
-   QPixmap button_3 = QIcon(":/images/button_3.png").pixmap(QSize(25, 25));
-   QPixmap button_4 = QIcon(":/images/button_4.png").pixmap(QSize(25, 25));
-   QPixmap button_5 = QIcon(":/images/button_5.png").pixmap(QSize(25, 25));
-   QPixmap button_6 = QIcon(":/images/button_6.png").pixmap(QSize(25, 25));
-   QPixmap button_7 = QIcon(":/images/button_7.png").pixmap(QSize(25, 25));
-   QPixmap button_8 = QIcon(":/images/button_8.png").pixmap(QSize(25, 25));
-   QPixmap armedbomb = QIcon(":/images/button_armedbomb.png").pixmap(QSize(25, 25));
-   QPixmap defusedbomb = QIcon(":/images/button_defusedbomb.png").pixmap(QSize(25, 25));
-   QPixmap flag = QIcon(":/images/button_flag.png").pixmap(QSize(25, 25));
-   QPixmap question = QIcon(":/images/button_question.png").pixmap(QSize(25, 25));
+   QPixmap unpressed = QIcon(":/images/Pictures/button_unpresseed.png").pixmap(QSize(25, 25));
+   QPixmap button_0 = QIcon(":/images/Pictures/button_0.png").pixmap(QSize(25, 25));
+   QPixmap button_1 = QIcon(":/images/Pictures/button_1.png").pixmap(QSize(25, 25));
+   QPixmap button_2 = QIcon(":/images/Pictures/button_2.png").pixmap(QSize(25, 25));
+   QPixmap button_3 = QIcon(":/images/Pictures/button_3.png").pixmap(QSize(25, 25));
+   QPixmap button_4 = QIcon(":/images/Pictures/button_4.png").pixmap(QSize(25, 25));
+   QPixmap button_5 = QIcon(":/images/Pictures/button_5.png").pixmap(QSize(25, 25));
+   QPixmap button_6 = QIcon(":/images/Pictures/button_6.png").pixmap(QSize(25, 25));
+   QPixmap button_7 = QIcon(":/images/Pictures/button_7.png").pixmap(QSize(25, 25));
+   QPixmap button_8 = QIcon(":/images/Pictures/button_8.png").pixmap(QSize(25, 25));
+   QPixmap armedbomb = QIcon(":/images/Pictures/button_armedbomb.png").pixmap(QSize(25, 25));
+   QPixmap defusedbomb = QIcon(":/images/Pictures/button_defusedbomb.png").pixmap(QSize(25, 25));
+   QPixmap flag = QIcon(":/images/Pictures/button_flag.png").pixmap(QSize(25, 25));
+   QPixmap question = QIcon(":/images/Pictures/button_question.png").pixmap(QSize(25, 25));
    bool onceField = true;
    bool onceResize = true;
    QString message = "Error";
@@ -70,55 +70,59 @@ private:
    std::vector<QPoint> visited; // Для отслеживания уже открытых клеток
    int currentRadius = 1;       // Переменная для отслеживания радиуса
    int cellsOpenedGlobal = 1;
-   std::array<QUrl, 48> sources = {QUrl("qrc:/sound/background/2_Young_4_Love_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/All_I_Wanna_Do_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/All_Mine_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Another_Galaxy_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Bad_Girl_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Brand_New_Love_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Devotion_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Dont_Rock_The_Boat_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Dreaming_of_You_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Faith_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Fascination_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Figured_Out_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Fly_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Foolin_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Forever_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Freedom_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Frequency_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Friend_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Get_Away_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Go_All_Nite_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Heat_of_the_Moment_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/I_Need_That_Feeling_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/I_Want_You_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Just_Right_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Last_2_Know_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Love_2nite_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Love_in_Motion_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Midnight_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Moments_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Motion_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Neon_Heart_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Nightmare_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Party_Princess_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Physical_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Play_It_Cool_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Shadow_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Something_Good_Tonight_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Summer84_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Take_U_On_A_Ride_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Take_Ur_Hand_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/The_Dream_Machine_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Touch_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/U_Can_Have_It_All_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/U_Keep_Me_Up_All_Nite_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/UFO_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Undercover_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/Unforgettable_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/background/We_Got_Somethin_INSTRUMENTAL.mp3")};
+   std::array<QUrl, 48> sources = {QUrl("qrc:/sound/sound/background/2_Young_4_Love_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/All_I_Wanna_Do_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/All_Mine_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Another_Galaxy_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Bad_Girl_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Brand_New_Love_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Devotion_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Dont_Rock_The_Boat_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Dreaming_of_You_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Faith_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Fascination_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Figured_Out_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Fly_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Foolin_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Forever_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Freedom_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Frequency_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Friend_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Get_Away_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Go_All_Nite_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Heat_of_the_Moment_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/I_Need_That_Feeling_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/I_Want_You_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Just_Right_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Last_2_Know_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Love_2nite_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Love_in_Motion_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Midnight_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Moments_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Motion_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Neon_Heart_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Nightmare_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Party_Princess_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Physical_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Play_It_Cool_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Shadow_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Something_Good_Tonight_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Summer84_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Take_U_On_A_Ride_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Take_Ur_Hand_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/The_Dream_Machine_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Touch_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/U_Can_Have_It_All_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/U_Keep_Me_Up_All_Nite_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/UFO_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Undercover_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Unforgettable_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/We_Got_Somethin_INSTRUMENTAL.mp3")};
    QAudioOutput *audioOutput = new QAudioOutput(this);
+   QAudioOutput *audioOutputUi = new QAudioOutput(this);
+   QMediaPlayer *soundUi = new QMediaPlayer(this);
+   QUrl soundClicked = QUrl("qrc:/sound/sound/Button.mp3");
+   QUrl soundCheckBox = QUrl("qrc:/sound/sound/CheckBox.mp3");
 public slots:
    void log(const QString &message)
    {

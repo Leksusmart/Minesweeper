@@ -38,7 +38,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    timerSec->start(1000);
 
    // Настройка кнопок рекордов и настроек
-   ui->btn_records->setIcon(QIcon(":/images/cup.png"));
+   ui->btn_records->setIcon(QIcon(":/images/Pictures/cup.png"));
    ui->btn_records->setIconSize(QSize(25, 25));
    ui->btn_settings->setIconSize(QSize(25, 25));
    ui->btn_records->setFixedSize(QSize(25, 25));
@@ -126,7 +126,10 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       MusicVolume = ui->SliderMusicVolume->value() / 100.0;
       audioOutput->setVolume(MusicVolume);
    });
-   connect(ui->SliderUiVolume, &QSlider::valueChanged, this, [=] { UiVolume = ui->SliderUiVolume->value() / 100.0; });
+   connect(ui->SliderUiVolume, &QSlider::valueChanged, this, [=] {
+      UiVolume = ui->SliderUiVolume->value() / 100.0;
+      audioOutputUi->setVolume(UiVolume);
+   });
    connect(timerSec, &QTimer::timeout, this, [=] {
       seconds++;
       if (seconds >= 60) {
@@ -139,28 +142,6 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       }
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
    });
-
-   // Настройка звука
-   background->setAudioOutput(audioOutput);
-   audioOutput->setVolume(MusicVolume);
-   QUrl source;
-   srand(time(NULL));
-   if (rand() % 2 == 0)
-      source = source1;
-   else
-      source = source2;
-   background->setSource(source);
-   connect(background, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
-      if (status == QMediaPlayer::EndOfMedia) {
-         if (background->source() == source1) {
-            background->setSource(source2);
-         } else {
-            background->setSource(source1);
-         }
-         volumeUp();
-      }
-   });
-   volumeUp();
 
    // Показ подсказок для новых пользователей
    ui->labelStaticHintRecords->hide();
@@ -181,6 +162,52 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
          ui->toolButtonStaticArrow2->hide();
       });
    }
+
+   // Настройка звука
+   // Фоновая музыка
+   background->setAudioOutput(audioOutput);
+   audioOutput->setVolume(MusicVolume);
+   QUrl source;
+   srand(time(NULL));
+   if (rand() % 2 == 0)
+      source = source1;
+   else
+      source = source2;
+   background->setSource(source);
+   connect(background, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
+      if (status == QMediaPlayer::EndOfMedia) {
+         if (background->source() == source1) {
+            background->setSource(source2);
+         } else {
+            background->setSource(source1);
+         }
+         volumeUp();
+      }
+   });
+   volumeUp();
+   // Звуки интерфейса
+   soundUi->setAudioOutput(audioOutputUi);
+   audioOutputUi->setVolume(UiVolume);
+   connect(ui->btn_records, &QToolButton::clicked, this, [=] {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   });
+   connect(ui->comboBox, &QComboBox::activated, this, [=] {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   });
+   connect(ui->btn_settings, &QToolButton::clicked, this, [=] {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   });
+   connect(ui->btn_start, &QPushButton::clicked, this, [=] {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   });
+   connect(ui->checkBoxWatchAllField, &QCheckBox::clicked, this, [=] {
+      soundUi->setSource(soundCheckBox);
+      soundUi->play();
+   });
 }
 void WelcomeWindow::startGame()
 {
@@ -523,9 +550,9 @@ void WelcomeWindow::endGame(bool win)
    else
       log("Game End result - Defeat");
    saveData();
-   double g = GamesCounter;
-   double w = Wins;
-   if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
+   double games = GamesCounter;
+   double wins = Wins;
+   if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((wins / games) * 100.0) + "%");
 }
 WelcomeWindow::~WelcomeWindow()
 {

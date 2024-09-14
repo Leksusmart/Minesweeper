@@ -36,7 +36,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QMainWindow {
-	background-image: url(:/images/Background1.png);
+	background-image: url(:/images/Pictures/Background1.png);
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -1761,7 +1761,7 @@ QToolButton:hover {
     <property name="styleSheet">
      <string notr="true">QLabel {
 	
-	image: url(:/images/GameName.png);
+	image: url(:/images/Pictures/GameName.png);
 }</string>
     </property>
     <property name="text">

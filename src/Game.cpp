@@ -38,7 +38,9 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
 
    connect(timerSec, &QTimer::timeout, this, &GameWindow::secTimer);
    timerSec->start(1000);
+
    //Звук
+   // Фоновая музыка
    audioOutput->setVolume(parent->MusicVolume);
    background->setAudioOutput(audioOutput);
    int i = rand() % 48;
@@ -60,11 +62,27 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
       }
    });
    background->play(); // Запускаем воспроизведение
+
+   // Звуки интерфейса
+   soundUi->setAudioOutput(audioOutputUi);
+   audioOutputUi->setVolume(parent->UiVolume);
+   connect(ui->btn_exit, &QToolButton::clicked, this, [=] {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   });
 }
 void GameWindow::leftClick(int x, int y)
 {
-   // Реализация левого клика
    if (GameEnd == true) return;
+
+   // Звуки интерфейса
+   if (buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize()).toImage() != button_0.toImage()) {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   } else
+      return;
+
+   // Реализация левого клика
    QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    if (currentPixmap.toImage() == flag.toImage()) return;
 
@@ -172,9 +190,9 @@ void GameWindow::leftClick(int x, int y)
                   if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
                       || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
                      if (Field[nx][ny] != 9) {
-                        buttons[nx][ny]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[nx][ny])));
+                        buttons[nx][ny]->setIcon(QIcon(QString(":/images/Pictures/button_%1.png").arg(Field[nx][ny])));
                         openFieldCounter++;
-                        if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == button_0.toImage()) {
+                        if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == button_0.toImage()) {
                            //Отключение видимости нажатия на кнопку
                            buttons[nx][ny]->setStyleSheet(R"(
                               QToolButton {
@@ -182,10 +200,12 @@ void GameWindow::leftClick(int x, int y)
                                  border: none;
                               }
                               QToolButton:pressed {
+                                 border: none;
                                  padding: 0px;
                                  margin: 0px;
                               }
                            )");
+                           // Открываем соседние клетки
                            for (int d2x = -1; d2x <= 1; d2x++) {
                               for (int d2y = -1; d2y <= 1; d2y++) {
                                  int n2x = nx + d2x;
@@ -197,7 +217,7 @@ void GameWindow::leftClick(int x, int y)
                            }
                         }
                      } else {
-                        buttons[nx][ny]->setIcon(QIcon(":/images/button_armedbomb.png"));
+                        buttons[nx][ny]->setIcon(QIcon(":/images/Pictures/button_armedbomb.png"));
                         deadCellx = x;
                         deadCelly = y;
                         endGame(false);
@@ -211,9 +231,21 @@ void GameWindow::leftClick(int x, int y)
       log(QString("Open cell x%1y%2 value = %3").arg(x).arg(y).arg(Field[x][y]));
       if (Field[x][y] != 9) {
          openFieldCounter++;
-         buttons[x][y]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[x][y])));
+         buttons[x][y]->setIcon(QIcon(QString(":/images/Pictures/button_%1.png").arg(Field[x][y])));
          if (buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == button_0.toImage()) {
-            // Открываем соседние пустые клетки
+            //Отключение видимости нажатия на кнопку
+            buttons[x][y]->setStyleSheet(R"(
+            QToolButton {
+               background-color: #808080;
+               border: none;
+               }
+               QToolButton:pressed {
+                  border: none;
+                  padding: 0px;
+                  margin: 0px;
+               }
+            )");
+            // Открываем соседние клетки
             for (int dx = -1; dx <= 1; dx++) {
                for (int dy = -1; dy <= 1; dy++) {
                   int nx = x + dx;
@@ -241,6 +273,15 @@ void GameWindow::leftClick(int x, int y)
 }
 void GameWindow::rightClick(int x, int y)
 {
+   if (GameEnd == true) return;
+
+   // Звуки интерфейса
+   if (buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize()).toImage() != button_0.toImage()) {
+      soundUi->setSource(soundClicked);
+      soundUi->play();
+   } else
+      return;
+
    // Реализация правого клика
    QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
@@ -262,10 +303,10 @@ void GameWindow::rightClick(int x, int y)
             int nx = x + dx;
             int ny = y + dy;
             if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-               if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
-                   || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
+               if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()
+                   || buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == question.toImage()) {
                   unpressedCounter++;
-               } else if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == flag.toImage()) {
+               } else if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == flag.toImage()) {
                   flagCounter++;
                }
             }
@@ -273,7 +314,7 @@ void GameWindow::rightClick(int x, int y)
       }
       int number = 0;
       for (int i = 1; i <= 8; ++i) {
-         QPixmap buttonPixmap = QIcon(QString(":/images/button_%1.png").arg(i)).pixmap(QSize(25, 25));
+         QPixmap buttonPixmap = QIcon(QString(":/images/Pictures/button_%1.png").arg(i)).pixmap(QSize(25, 25));
          if (currentPixmap.toImage() == buttonPixmap.toImage()) {
             number = i;
             break;
@@ -288,8 +329,8 @@ void GameWindow::rightClick(int x, int y)
                int nx = x + dx;
                int ny = y + dy;
                if (nx >= 0 && nx < rows && ny >= 0 && ny < cols) {
-                  if (buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == unpressed.toImage()
-                      || buttons[nx][ny]->icon().pixmap(buttons[x][y]->iconSize()).toImage() == question.toImage()) {
+                  if (buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == unpressed.toImage()
+                      || buttons[nx][ny]->icon().pixmap(buttons[nx][ny]->iconSize()).toImage() == question.toImage()) {
                      ui->lcdNumberMarked->display(ui->lcdNumberMarked->value() + 1);
                      buttons[nx][ny]->setIcon(flag);
                      buttons[nx][ny]->setStyleSheet(R"(
@@ -467,7 +508,7 @@ void GameWindow::minesExplosion()
                      if (Field[newX][newY] != 9) {
                         if (parent->ui->checkBoxWatchAllField->isChecked()) {
                            if (buttons[newX][newY]->isEnabled())
-                              buttons[newX][newY]->setIcon(QIcon(QString(":/images/button_%1.png").arg(Field[newX][newY])));
+                              buttons[newX][newY]->setIcon(QIcon(QString(":/images/Pictures/button_%1.png").arg(Field[newX][newY])));
                         }
                      } else {
                         if (buttons[newX][newY]->icon().pixmap(buttons[newX][newY]->iconSize()).toImage() != defusedbomb.toImage())
@@ -553,12 +594,14 @@ bool GameWindow::createButtonField()
             border: none;
          }
          QToolButton:pressed {
+            border: none;
             padding-top: 1px;
             padding-left: 1px;
             margin-bottom: -1px;
             margin-right: -1px;
          }
          )");
+
          buttons[i][j]->setIconSize(QSize(25, 25));
          buttons[i][j]->setFixedSize(25, 25);
          buttons[i][j]->setIcon(unpressed);
