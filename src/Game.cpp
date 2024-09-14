@@ -477,6 +477,11 @@ void GameWindow::minesExplosion()
 {
    log("Explosion started");
 
+   // Звук
+   background->stop();
+   soundUi->setSource(QUrl("qrc:/sound/sound/Boom.mp3"));
+   soundUi->play();
+
    // Устанавливаем интервал и запускаем таймер
    explosionTimer->setInterval(interval);
    explosionTimer->start();
@@ -565,6 +570,7 @@ void GameWindow::resizeEvent(QResizeEvent *event)
 void GameWindow::closeEvent(QCloseEvent *event)
 {
    background->stop();
+   soundUi->stop();
    timerSec->stop();
    explosionTimer->stop();
    log("Game closing...");
@@ -615,6 +621,8 @@ bool GameWindow::createButtonField()
 
 GameWindow::~GameWindow()
 {
+   delete background;
+   delete soundUi;
    for (int i = 0; i < rows; i++) {
       for (int j = 0; j < cols; j++) {
          delete buttons[i][j];

@@ -74,5 +74,6 @@
         <file>sound/background/Undercover_INSTRUMENTAL.mp3</file>
         <file>sound/background/Unforgettable_INSTRUMENTAL.mp3</file>
         <file>sound/background/We_Got_Somethin'_INSTRUMENTAL.mp3</file>
+        <file>sound/Boom.mp3</file>
     </qresource>
 </RCC>
