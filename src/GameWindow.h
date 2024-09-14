@@ -77,7 +77,7 @@ private:
                                    QUrl("qrc:/sound/sound/background/Bad_Girl_INSTRUMENTAL.mp3"),
                                    QUrl("qrc:/sound/sound/background/Brand_New_Love_INSTRUMENTAL.mp3"),
                                    QUrl("qrc:/sound/sound/background/Devotion_INSTRUMENTAL.mp3"),
-                                   QUrl("qrc:/sound/sound/background/Dont_Rock_The_Boat_INSTRUMENTAL.mp3"),
+                                   QUrl("qrc:/sound/sound/background/Don't_Rock_The_Boat_INSTRUMENTAL.mp3"),
                                    QUrl("qrc:/sound/sound/background/Dreaming_of_You_INSTRUMENTAL.mp3"),
                                    QUrl("qrc:/sound/sound/background/Faith_INSTRUMENTAL.mp3"),
                                    QUrl("qrc:/sound/sound/background/Fascination_INSTRUMENTAL.mp3"),

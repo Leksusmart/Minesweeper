@@ -45,6 +45,11 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
    background->setAudioOutput(audioOutput);
    int i = rand() % 48;
    background->setSource(sources[i]);
+   QString sourceString = sources[i].toString();
+   sourceString = sourceString.remove(0, 28);
+   sourceString.remove(-4, 4);
+
+   log(QString("Music start playing: %1").arg(sourceString));
    connect(background, &QMediaPlayer::mediaStatusChanged, this, [=](QMediaPlayer::MediaStatus status) {
       if (status == QMediaPlayer::EndOfMedia) {
          // Получаем текущий источник
@@ -57,7 +62,8 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
          } else {
             background->setSource(sources[0]); // Переключаем на первый источник, если достигнут конец
          }
-         log(QString("Music auto-changed from %1 to %2").arg(currentSource.toString(), background->source().toString())); // Преобразуем QUrl в QString
+         log(QString("Music auto-changed from %1 to %2")
+                .arg(currentSource.toString().remove(0, 28).remove(-4, 4), background->source().toString().remove(0, 28).remove(-4, 4)));
          background->play(); // Запускаем воспроизведение
       }
    });
