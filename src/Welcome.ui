@@ -65,7 +65,7 @@ border-radius:5px;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="records">
      <widget class="QScrollArea" name="scrollAreaRecords">
@@ -108,7 +108,7 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-75</y>
+         <y>0</y>
          <width>317</width>
          <height>431</height>
         </rect>
@@ -602,7 +602,7 @@ border-radius:5px;
          <x>0</x>
          <y>0</y>
          <width>316</width>
-         <height>407</height>
+         <height>365</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -826,31 +826,6 @@ border-radius:5px;
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBoxMusic">
-          <property name="font">
-           <font>
-            <family>Segoe Print</family>
-            <pointsize>12</pointsize>
-            <bold>false</bold>
-           </font>
-          </property>
-          <property name="contextMenuPolicy">
-           <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">color:silver;</string>
-          </property>
-          <property name="currentText">
-           <string>Набор музыки №1</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Набор музыки №1</string>
-           </property>
-          </item>
-         </widget>
         </item>
         <item>
          <widget class="QLabel" name="labelStaticSettings">

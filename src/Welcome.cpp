@@ -23,16 +23,21 @@
 WelcomeWindow::WelcomeWindow(QMainWindow *parent)
     : ui(new Ui::WelcomeWindow)
 {
+   // Открытие файла лога
    logFile->open(QIODevice::WriteOnly | QIODevice::Text);
    ui->setupUi(this);
-   //Убираем обучение
+
+   // Удаление пункта "Обучение" из комбо-бокса
    ui->comboBox->removeItem(0);
 
-   //Убираем отправление ошибки
+   // Скрытие элементов отправки ошибки
    ui->labelStaticSettingsSendError->hide();
    ui->groupBoxSendError->hide();
 
+   // Запуск таймера
    timerSec->start(1000);
+
+   // Настройка кнопок рекордов и настроек
    ui->btn_records->setIcon(QIcon(":/images/cup.png"));
    ui->btn_records->setIconSize(QSize(25, 25));
    ui->btn_settings->setIconSize(QSize(25, 25));
@@ -40,14 +45,17 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->btn_settings->setFixedSize(QSize(25, 25));
    ui->stackedWidget->hide();
 
+   // Загрузка данных
    loadData();
 
+   // Настройка пользовательского интерфейса
    ui->gridLayoutCustom->addWidget(ui->frame, 1, 2, Qt::AlignTop | Qt::AlignLeft);
    int width = ui->progressBarX->width() * ui->progressBarX->value() / ui->progressBarX->maximum();
    int height = ui->progressBarY->height() * ui->progressBarY->value() / ui->progressBarY->maximum();
    ui->frame->setFixedSize(width, height);
    ui->frame->setGeometry(28, 20, ui->frame->width(), ui->frame->height());
 
+   // Создание и настройка маркеров
    markerX = new QLabel(ui->scrollAreaCustom->widget());
    markerY = new QLabel(ui->scrollAreaCustom->widget());
    markerX->setFixedSize(2, 19);
@@ -55,6 +63,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    markerY->setFixedSize(23, 2);
    markerY->setStyleSheet("background-color: black;");
 
+   // Обновление статистики
    ui->labelAllGames->setText(QString::number(GamesCounter));
    ui->labelDefeats->setText(QString::number(Defeats));
    ui->labelWins->setText(QString::number(Wins));
@@ -64,6 +73,8 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
    else if (GamesCounter == 0)
       ui->labelWinsProcents->setText("0%");
+
+   // Получение размеров экрана и настройка максимальных значений
    QRect availableGeometry = QApplication::primaryScreen()->availableGeometry();
    int screenwidth = availableGeometry.width();
    int screenheight = availableGeometry.height();
@@ -76,6 +87,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    ui->SliderX->setMaximum(maxCols);
    ui->SliderY->setMaximum(maxRows);
 
+   // Подключение сигналов к слотам
    connect(ui->btn_records, &QPushButton::clicked, this, [=] {
       showWidget(0);
       log("User pressed \"Records\"");
@@ -128,7 +140,7 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       ui->labelPlayedTime->setText(setTime(hours, minutes, seconds));
    });
 
-   //Звук
+   // Настройка звука
    background->setAudioOutput(audioOutput);
    audioOutput->setVolume(MusicVolume);
    QUrl source;
@@ -150,24 +162,24 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
    });
    volumeUp();
 
+   // Показ подсказок для новых пользователей
    ui->labelStaticHintRecords->hide();
    ui->labelStaticHintSettings->hide();
    ui->toolButtonStaticArrow1->hide();
    ui->toolButtonStaticArrow2->hide();
-   qDebug()<<minutes;
-   if(minutes < 5){
-       ui->labelStaticHintRecords->show();
-       ui->labelStaticHintSettings->show();
-       ui->toolButtonStaticArrow1->show();
-       ui->toolButtonStaticArrow2->show();
-       qDebug()<<"showed";
-       QTimer::singleShot((5 - minutes)* 60 * 1000, [=]{
-           qDebug()<<"activated";
-           ui->labelStaticHintRecords->hide();
-           ui->labelStaticHintSettings->hide();
-           ui->toolButtonStaticArrow1->hide();
-           ui->toolButtonStaticArrow2->hide();
-       });
+   if (minutes < 5) {
+      ui->labelStaticHintRecords->show();
+      ui->labelStaticHintSettings->show();
+      ui->toolButtonStaticArrow1->show();
+      ui->toolButtonStaticArrow2->show();
+      log("hints showed");
+      QTimer::singleShot((5 - minutes) * 60 * 1000, this, [=] {
+         log("hints removed");
+         ui->labelStaticHintRecords->hide();
+         ui->labelStaticHintSettings->hide();
+         ui->toolButtonStaticArrow1->hide();
+         ui->toolButtonStaticArrow2->hide();
+      });
    }
 }
 void WelcomeWindow::startGame()
@@ -466,8 +478,7 @@ void WelcomeWindow::volumeUp(double volume)
       audioOutput->setVolume(MusicVolume);
       return;
    }
-   log(QString("Volume: %1").arg(volume));
-   QTimer::singleShot(50, [=]() {
+   QTimer::singleShot(50, this, [=]() {
       audioOutput->setVolume(volume);
       volumeUp(volume);
    });
@@ -483,13 +494,12 @@ void WelcomeWindow::volumeDown(double volume)
    if (volume < 0 || volume > MusicVolume) {
       audioOutput->setVolume(0.0);
       background->pause();
-      QTimer::singleShot(50, [=]() {
+      QTimer::singleShot(50, this, [=]() {
          if (audioOutput->volume() != 0.0) volumeDown();
       });
       return;
    }
-   log(QString("Volume: %1").arg(volume));
-   QTimer::singleShot(50, [=]() {
+   QTimer::singleShot(50, this, [=]() {
       audioOutput->setVolume(volume);
       volumeDown(volume);
    });
@@ -517,14 +527,13 @@ void WelcomeWindow::endGame(bool win)
    double w = Wins;
    if (GamesCounter > 0) ui->labelWinsProcents->setText(QString::number((w / g) * 100.0) + "%");
 }
-
 WelcomeWindow::~WelcomeWindow()
 {
    timerSec->stop();
+   logFile->close();
    delete timerSec;
    delete markerX;
    delete markerY;
-   logFile->close();
    delete logFile;
    delete data;
    delete ui;
