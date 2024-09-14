@@ -149,6 +149,26 @@ WelcomeWindow::WelcomeWindow(QMainWindow *parent)
       }
    });
    volumeUp();
+
+   ui->labelStaticHintRecords->hide();
+   ui->labelStaticHintSettings->hide();
+   ui->toolButtonStaticArrow1->hide();
+   ui->toolButtonStaticArrow2->hide();
+   qDebug()<<minutes;
+   if(minutes < 5){
+       ui->labelStaticHintRecords->show();
+       ui->labelStaticHintSettings->show();
+       ui->toolButtonStaticArrow1->show();
+       ui->toolButtonStaticArrow2->show();
+       qDebug()<<"showed";
+       QTimer::singleShot((5 - minutes)* 60 * 1000, [=]{
+           qDebug()<<"activated";
+           ui->labelStaticHintRecords->hide();
+           ui->labelStaticHintSettings->hide();
+           ui->toolButtonStaticArrow1->hide();
+           ui->toolButtonStaticArrow2->hide();
+       });
+   }
 }
 void WelcomeWindow::startGame()
 {

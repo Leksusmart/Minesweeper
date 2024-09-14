@@ -65,7 +65,7 @@ border-radius:5px;
 }</string>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="records">
      <widget class="QScrollArea" name="scrollAreaRecords">
@@ -108,9 +108,9 @@ border-radius:5px;
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>320</width>
-         <height>442</height>
+         <y>-75</y>
+         <width>317</width>
+         <height>431</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
@@ -602,7 +602,7 @@ border-radius:5px;
          <x>0</x>
          <y>0</y>
          <width>316</width>
-         <height>408</height>
+         <height>407</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1672,6 +1672,9 @@ QToolButton:hover {
          <pointsize>16</pointsize>
         </font>
        </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
        <property name="contextMenuPolicy">
         <enum>Qt::ContextMenuPolicy::NoContextMenu</enum>
        </property>
@@ -1787,12 +1790,119 @@ QToolButton:hover {
 }</string>
     </property>
     <property name="text">
-     <string> </string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QLabel" name="labelStaticHintSettings">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>150</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>WhatsThisCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:black;</string>
+    </property>
+    <property name="text">
+     <string>Настройки</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelStaticHintRecords">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>150</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>WhatsThisCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:black;</string>
+    </property>
+    <property name="text">
+     <string>Рекорды</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="toolButtonStaticArrow2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>258</x>
+      <y>142</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton { background-color: transparent; border: none; padding: 5px; }
+QToolButton:hover { background-color: transparent; }
+QToolButton:pressed { background-color: transparent; }</string>
+    </property>
+    <property name="icon">
+     <iconset theme="QIcon::ThemeIcon::AppointmentNew"/>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="toolButtonStaticArrow1">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>68</x>
+      <y>142</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QToolButton { background-color: transparent; border: none; padding: 5px; }
+QToolButton:hover { background-color: transparent; }
+QToolButton:pressed { background-color: transparent; }</string>
+    </property>
+    <property name="icon">
+     <iconset theme="QIcon::ThemeIcon::AppointmentNew"/>
+    </property>
+   </widget>
+   <zorder>labelStaticHintSettings</zorder>
+   <zorder>labelStaticHintRecords</zorder>
+   <zorder>toolButtonStaticArrow2</zorder>
+   <zorder>toolButtonStaticArrow1</zorder>
+   <zorder>stackedWidget</zorder>
+   <zorder>btn_start</zorder>
+   <zorder>btn_exit</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>labelGameName</zorder>
   </widget>
  </widget>
  <tabstops>
