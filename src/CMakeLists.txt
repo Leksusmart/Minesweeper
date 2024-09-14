@@ -27,7 +27,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         resourses.qrc
         GameWindow.h Game.cpp Game.ui
         meta.rc
-        data.json
         GameWindow.h Game.cpp Game.ui
 
     )
