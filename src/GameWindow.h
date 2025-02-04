@@ -62,8 +62,8 @@ private:
    qint64 time = 0;
    short int interval = 100;
    bool GameEnd = false;
-   short int deadCellx = NULL;
-   short int deadCelly = NULL;
+   short int deadCellx;
+   short int deadCelly;
    QTimer *explosionTimer = new QTimer;
    short int openFieldCounter = 0;
    std::queue<QPoint> queue;    // Используем очередь для обработки клеток

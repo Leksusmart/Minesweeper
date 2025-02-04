@@ -9,6 +9,7 @@
 #include <QMediaPlayer>
 #include <QTimer>
 #include <QUrl>
+#include <QStandardPaths>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -21,9 +22,10 @@ class WelcomeWindow : public QMainWindow
 public:
    WelcomeWindow(QMainWindow *parent = nullptr);
    ~WelcomeWindow();
-   QFile *logFile = new QFile("session.log");
+   const QString filePath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation).section('/', 0, -2) + "/Leksusmart Games/Minesweeper/";
+   QFile *logFile = new QFile(filePath+"session.log");
+   QFile *data = new QFile(filePath+"data.json");
    QDateTime startTime = QDateTime::currentDateTime();
-   QFile *data = new QFile("data.json");
    int GamesCounter = 0;
    int Defeats = 0;
    int Wins = 0;

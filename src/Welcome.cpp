@@ -298,6 +298,14 @@ void WelcomeWindow::updateMarkerYPosition(int value)
 }
 void WelcomeWindow::saveData()
 {
+   QDir dir(QFileInfo(filePath+"data.json").absolutePath());
+
+   if (!dir.exists()) {
+      if (!dir.mkpath(".")) {
+         qDebug() << "saveData: Не удалось создать директории по пути" << dir.absolutePath();
+      }
+   }
+
    QJsonDocument document;
    QJsonObject list;
    bool needLoad = false;
@@ -474,6 +482,13 @@ qint64 WelcomeWindow::decryptTime(QString sTime)
 }
 void WelcomeWindow::log(const QString &message)
 {
+   QDir dir(QFileInfo(filePath+"session.log").absolutePath());
+
+   if (!dir.exists()) {
+      if (!dir.mkpath(".")) {
+         qDebug() << "log: Не удалось создать директории по пути" << dir.absolutePath();
+      }
+   }
    qDebug() << message;
    QDateTime currentTime = QDateTime::currentDateTime();
    qint64 elapsedMilliseconds = startTime.msecsTo(currentTime);

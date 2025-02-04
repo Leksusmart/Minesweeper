@@ -1,55 +1,47 @@
+set(PROJECT_NAME "Minesweeper")
 cmake_minimum_required(VERSION 3.16)
 
-project(Minesweeper VERSION 0.1 LANGUAGES CXX)
+if (WIN32)
+    project(${PROJECT_NAME} LANGUAGES CXX)
+elseif(UNIX)
+    project(${PROJECT_NAME})
+endif()
 
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_CONFIGURATION_TYPES "Release;MinSizeRel" CACHE STRING "" FORCE)
+
+#======================= INCLUSION OF Qt =======================#
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_PREFIX_PATH $ENV{QTDIR})
+find_package(Qt6Core REQUIRED)
+find_package(Qt6Widgets REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS Multimedia)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#=================== INCLUSION OF Project Files ====================#
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
+include_directories(${SOURCE_DIR})
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-#find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Network REQUIRED)
-find_package(Qt6 COMPONENTS Core REQUIRED)
-find_package(Qt6 COMPONENTS Multimedia REQUIRED)
-
-set(PROJECT_SOURCES
-    src/main.cpp
-    src/Welcome.cpp
-    src/WelcomeWindow.h
-    src/Welcome.ui
-    src/GameWindow.h
-    src/Game.cpp
-    src/Game.ui
-    src/resourses.qrc
-    src/meta.rc
+file(GLOB_RECURSE PROJECT_SOURCES
+    "${SOURCE_DIR}/*.qrc"
+    "${SOURCE_DIR}/*.rc"
+    "${SOURCE_DIR}/*.cpp"
+    "${SOURCE_DIR}/*.h"
+    "${SOURCE_DIR}/*.ui"
 )
+#=================== SETUP EXECTUABLE ====================#
+# Add the forms directory to the AUTOUIC search paths
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_AUTOUIC_SEARCH_PATHS} ${SOURCE_DIR})
+# Add the executable
 
-
-add_executable(Minesweeper ${PROJECT_SOURCES})
-
-
-target_link_libraries(Minesweeper PRIVATE Qt6::Widgets Qt6::Core Qt6::Multimedia)
-
-if(NOT QT6_FOUND OR QT_VERSION VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Minesweeper)
+if (WIN32)
+    add_executable(${PROJECT_NAME} WIN32 ${PROJECT_SOURCES})
+elseif(UNIX)
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 endif()
-set_target_properties(Minesweeper PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
-)
 
-include(GNUInstallDirs)
-install(TARGETS Minesweeper
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+target_include_directories(${PROJECT_NAME} PRIVATE ${SOURCE_DIR})
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(Minesweeper)
-endif()
+#===================== LINKING LIBRARIES =======================#
+target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::Multimedia)
