@@ -30,4 +30,4 @@ BLOCK "VarFileInfo"
    END
 END
 
-IDI_ICON1 ICON "/Icon.ico"
+IDI_ICON1 ICON "src/Pictures/Icon.ico"

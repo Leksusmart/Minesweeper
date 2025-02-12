@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/images">
-        <file>Icon.ico</file>
         <file>Pictures/Background1.png</file>
         <file>Pictures/Background2.png</file>
         <file>Pictures/button_0.png</file>
@@ -20,6 +19,7 @@
         <file>Pictures/cup.png</file>
         <file>Pictures/GameName.png</file>
         <file>Pictures/tutorial_arrow.png</file>
+        <file>Pictures/Icon.ico</file>
     </qresource>
     <qresource prefix="/sound">
         <file>sound/Button.mp3</file>
