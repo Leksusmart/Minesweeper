@@ -55,7 +55,7 @@ private:
    QPixmap defusedbomb = QIcon(":/images/Pictures/button_defusedbomb.png").pixmap(QSize(25, 25));
    QPixmap flag = QIcon(":/images/Pictures/button_flag.png").pixmap(QSize(25, 25));
    QPixmap question = QIcon(":/images/Pictures/button_question.png").pixmap(QSize(25, 25));
-   bool onceField = true;
+   bool isFieldExists = false;
    bool onceResize = true;
    QString message = "Error";
    QTimer *timerSec = new QTimer;
@@ -130,6 +130,7 @@ public slots:
    };
 private slots:
    bool createButtonField();
+   void generateField(int startx, int starty);
    void resizeEvent(QResizeEvent *event) override;
    void closeEvent(QCloseEvent *event) override;
    void secTimer();

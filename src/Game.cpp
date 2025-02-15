@@ -15,9 +15,6 @@
 #include <QToolButton>
 #include <QTransform>
 #include <QUrl>
-#include <cstdlib>
-#include <ctime>
-#include <queue>
 
 GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QString message)
     : parent(parent)
@@ -80,85 +77,26 @@ GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QSt
 void GameWindow::leftClick(int x, int y)
 {
    if (GameEnd == true) return;
+   QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
 
    // Звуки интерфейса
-   if (buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize()).toImage() != button_0.toImage()) {
+   if (currentPixmap.toImage() != button_0.toImage()) {
       soundUi->setSource(soundClicked);
       soundUi->play();
    } else
       return;
 
    // Реализация левого клика
-   QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    if (currentPixmap.toImage() == flag.toImage()) return;
-
-   if (onceField) {
-      onceField = false;
-      int startx = x;
-      int starty = y;
-      short int counter = 0;
-      // Генерация мин
-      while (counter < mines) {
-         short int x = rand() % rows;
-         short int y = rand() % cols;
-         // Проверяем, что клетка не является миной, не является точкой старта
-         // и не находится рядом с точкой старта
-         if (Field[x][y] != 9 && (startx != x || starty != y)) {
-            bool isAdjacentToStart = false;
-
-            // Массив смещений для проверки соседних клеток
-            const int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-
-            // Проверяем соседние клетки
-            for (const auto &offset : offsets) {
-               int ni = startx + offset[0];
-               int nj = starty + offset[1];
-               if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && ni == x && nj == y) {
-                  isAdjacentToStart = true;
-                  break;
-               }
-            }
-
-            // Если клетка не соседняя, то ставим мину
-            if (!isAdjacentToStart) {
-               Field[x][y] = 9;
-               counter++;
-            }
-         }
-      }
-
-      // Дальше генерим цифры
-      for (int i = 0; i < rows; i++) {
-         QString row;
-         for (int j = 0; j < cols; j++) {
-            if (Field[i][j] != 9) { // Если это не мина
-               short int bombCounter = 0;
-
-               // Массив смещений для проверки соседей
-               const int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-
-               // Проверяем соседние ячейки
-               for (const auto &offset : offsets) {
-                  int ni = i + offset[0];
-                  int nj = j + offset[1];
-                  if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && Field[ni][nj] == 9) {
-                     bombCounter++;
-                  }
-               }
-               Field[i][j] = bombCounter; // Устанавливаем количество бомб вокруг
-               row += QString("[%1]").arg(Field[i][j]);
-            } else {
-               row += "[*]";
-            }
-         }
-         log(row);
-      }
+   if (isFieldExists == false) {
+      isFieldExists = true;
+      generateField(x, y);
    }
 
    QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
    bool matchFound = false;
    int number = 1;
-   for (const auto &pixmap : buttonPixmaps) {
+   for (auto &pixmap : buttonPixmaps) {
       if (currentPixmap.toImage() == pixmap.toImage()) {
          matchFound = true;
          break;
@@ -272,24 +210,84 @@ void GameWindow::leftClick(int x, int y)
          endGame(false);
       }
    }
+
    //проверка на победу
    if (rows * cols - mines == openFieldCounter) {
       endGame(true);
    }
 }
+void GameWindow::generateField(int startx, int starty){
+   short int counter = 0;
+   // Генерация мин
+   while (counter < mines) {
+      short int x = rand() % rows;
+      short int y = rand() % cols;
+      // Проверяем, что клетка не является миной, не является точкой старта
+      // и не находится рядом с точкой старта
+      if (Field[x][y] != 9 && (startx != x || starty != y)) {
+         bool isAdjacentToStart = false;
+
+         // Массив смещений для проверки соседних клеток
+         const int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+         // Проверяем соседние клетки
+         for (const auto &offset : offsets) {
+            int ni = startx + offset[0];
+            int nj = starty + offset[1];
+            if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && ni == x && nj == y) {
+               isAdjacentToStart = true;
+               break;
+            }
+         }
+
+         // Если клетка не соседняя, то ставим мину
+         if (!isAdjacentToStart) {
+            Field[x][y] = 9;
+            counter++;
+         }
+      }
+   }
+
+   // Дальше генерим цифры
+   for (int i = 0; i < rows; i++) {
+      QString row;
+      for (int j = 0; j < cols; j++) {
+         if (Field[i][j] != 9) { // Если это не мина
+            short int bombCounter = 0;
+
+            // Массив смещений для проверки соседей
+            const int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
+
+            // Проверяем соседние ячейки
+            for (const auto &offset : offsets) {
+               int ni = i + offset[0];
+               int nj = j + offset[1];
+               if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && Field[ni][nj] == 9) {
+                  bombCounter++;
+               }
+            }
+            Field[i][j] = bombCounter; // Устанавливаем количество бомб вокруг
+            row += QString("[%1]").arg(Field[i][j]);
+         } else {
+            row += "[*]";
+         }
+      }
+      log(row);
+   }
+}
 void GameWindow::rightClick(int x, int y)
 {
    if (GameEnd == true) return;
+   QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
 
    // Звуки интерфейса
-   if (buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize()).toImage() != button_0.toImage()) {
+   if (currentPixmap.toImage() != button_0.toImage()) {
       soundUi->setSource(soundClicked);
       soundUi->play();
    } else
       return;
 
    // Реализация правого клика
-   QPixmap currentPixmap = buttons[x][y]->icon().pixmap(buttons[x][y]->iconSize());
    QVector<QPixmap> buttonPixmaps = {button_1, button_2, button_3, button_4, button_5, button_6, button_7, button_8};
    bool matchFound = false;
 
@@ -414,6 +412,7 @@ void GameWindow::endGame(bool win)
          )");
       }
    }
+
    //Обновление статистики
    parent->endGame(win);
    for (int x = 0; x < rows; x++)
