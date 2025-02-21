@@ -2,6 +2,8 @@
 #define GAMEWINDOW_H
 
 #include "WelcomeWindow.h"
+#include "ui_Game.h"
+#include "ui_Welcome.h"
 
 #include <QApplication>
 #include <QIcon>
@@ -16,12 +18,16 @@
 #include <QUrl>
 #include <QVector>
 #include <QWidget>
+#include <QCloseEvent>
+#include <QDateTime>
+#include <QLabel>
+#include <QMessageBox>
+#include <QScreen>
+#include <QTransform>
 #include <array>
 #include <queue>
 
-namespace Ui {
-class GameWindow;
-}
+namespace Ui { class GameWindow; }
 
 class GameWindow : public QMainWindow
 {

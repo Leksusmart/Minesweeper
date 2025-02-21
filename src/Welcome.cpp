@@ -1,24 +1,5 @@
-#include <QCloseEvent>
-#include <QCoreApplication>
-#include <QDateTime>
-#include <QDebug>
-#include <QDir>
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QMessageBox>
-#include <QScrollBar>
-#include <QSlider>
-#include <QString>
-#include <QTextStream>
-#include <QTimer>
-#include <QUrl>
-#include <QtCore>
-#include "./ui_Welcome.h"
-#include "GameWindow.h"
 #include "WelcomeWindow.h"
-#include "ui_Game.h"
-#include <sstream>
+#include "GameWindow.h"
 
 WelcomeWindow::WelcomeWindow(QMainWindow *parent)
     : ui(new Ui::WelcomeWindow)

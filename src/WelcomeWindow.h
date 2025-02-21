@@ -1,6 +1,9 @@
 #ifndef WELCOMEWINDOW_H
 #define WELCOMEWINDOW_H
 
+#include "ui_Game.h"
+#include "ui_Welcome.h"
+
 #include <QAudioOutput>
 #include <QDateTime>
 #include <QFile>
@@ -10,12 +13,21 @@
 #include <QTimer>
 #include <QUrl>
 #include <QStandardPaths>
+#include <QCloseEvent>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMessageBox>
+#include <QScrollBar>
+#include <QSlider>
+#include <QString>
+#include <QTextStream>
+#include <QtCore>
+#include <sstream>
 
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class WelcomeWindow;
-}
-QT_END_NAMESPACE
+namespace Ui { class WelcomeWindow; }
 
 class WelcomeWindow : public QMainWindow
 {

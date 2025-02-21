@@ -1,20 +1,4 @@
 #include "GameWindow.h"
-#include "ui_Game.h"
-#include "ui_Welcome.h"
-
-#include <QApplication>
-#include <QCloseEvent>
-#include <QDateTime>
-#include <QImage>
-#include <QLabel>
-#include <QMessageBox>
-#include <QPixmap>
-#include <QPushButton>
-#include <QScreen>
-#include <QTimer>
-#include <QToolButton>
-#include <QTransform>
-#include <QUrl>
 
 GameWindow::GameWindow(WelcomeWindow *parent, int rows, int cols, int mines, QString message)
     : parent(parent)
